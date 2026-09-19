@@ -1,0 +1,5 @@
+[     395ms] [INFO] [preview-bridge] v1.0.0 @ https://hofn4rz6912gqaek.jitda.io/__preview-bridge.js:1
+[     401ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) @ https://hofn4rz6912gqaek.jitda.io/:0
+[   33035ms] [ERROR] Failed to load resource: the server responded with a status of 403 () @ https://hofn4rz6912gqaek.jitda.io/api/checkins:0
+[   50905ms] [INFO] [preview-bridge] v1.0.0 @ https://hofn4rz6912gqaek.jitda.io/__preview-bridge.js:1
+[   50981ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) @ https://hofn4rz6912gqaek.jitda.io/:0
