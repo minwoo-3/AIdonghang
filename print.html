@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>LoG고 기획서</title>
+  <style>
+    @page { size: A4; margin: 0; }
+    * { box-sizing: border-box; }
+    body { margin: 0; color: #24282b; background: white; font-family: Arial, "Noto Sans KR", sans-serif; font-size: 10px; line-height: 1.35; }
+    .sheet { width: 210mm; min-height: 297mm; padding: 16mm 17mm 13mm; }
+    h1 { margin: 0 0 9mm; padding-bottom: 5mm; border-bottom: 1.2px solid #202428; font-size: 27px; letter-spacing: -1.5px; }
+    h2 { margin: 7mm 0 3mm; padding-bottom: 2mm; border-bottom: 1.1px solid #202428; font-size: 16px; letter-spacing: -1px; }
+    table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+    td { border: .6px solid #d1d5d8; vertical-align: middle; }
+    .label { width: 25mm; padding: 3mm 3.3mm; background: #f1f3f4; font-weight: 700; font-size: 11px; }
+    .content { padding: 3mm 4mm; }
+    .top td { height: 10mm; }
+    .top .project-label { width: 27mm; }
+    .top .team-label { width: 27mm; }
+    .top .members-label { width: 27mm; }
+    .top .content { font-size: 11px; font-weight: 700; }
+    .story tr { height: 25mm; }
+    .story .content { font-size: 10px; }
+    .story .content strong { display: block; margin-bottom: 1.5mm; font-size: 10.5px; }
+    .details tr.requirements { height: 31mm; }
+    .details tr.verify { height: 31mm; }
+    .details tr.data { height: 14mm; }
+    .details tr.scope { height: 25mm; }
+    .details .content { padding: 2.4mm 4mm; }
+    .hint { display: block; margin-bottom: 1.5mm; color: #7b8287; font-size: 9px; }
+    ol { margin: 0; padding-left: 4mm; }
+    li { margin: 0 0 1mm; padding-left: 1mm; }
+    .scope-line { margin: 0 0 2mm; }
+    .scope-line:last-child { margin-bottom: 0; }
+    .scope-line b { display: inline-block; width: 10mm; }
+    .small { font-size: 9.5px; }
+  </style>
+</head>
+<body>
+  <div class="sheet">
+    <h1>기획서</h1>
+    <table class="top">
+      <tr><td class="label project-label">프로젝트 이름</td><td class="content" colspan="5">LoG고</td></tr>
+      <tr><td class="label team-label">팀 이름</td><td class="content" colspan="2">소마고A</td><td class="label members-label">팀원</td><td class="content" colspan="2">강민우, 정성원, 조현</td></tr>
+    </table>
+
+    <h2>1. 무엇을 만들까</h2>
+    <table class="story">
+      <tr><td class="label">사용자와 상황</td><td class="content"><strong>선생님들이 야자시간에 학생들이 교실을 이동할 때 확인해야 하는 상황</strong><span class="small">학생들이 정해진 이동실로 이동하는 동안, 여러 이동실을 담당하는 선생님들이 도착 여부를 확인해야 합니다.</span></td></tr>
+      <tr><td class="label">문제</td><td class="content"><strong>각기 다른 이동실에 있는 야자 감독 선생님들이 모두 교실을 둘러보아야 합니다.</strong><span class="small">직접 이동하며 확인해야 해서 시간이 걸리고 학생의 도착 여부를 놓칠 수 있습니다.</span></td></tr>
+      <tr><td class="label">해결 방법</td><td class="content"><strong>이동실에 지정된 QR 코드를 학생이 찍으면 선생님에게 도착 알림을 보냅니다.</strong><span class="small">예: “김OO이 1번 실습실에 도착했어요”라는 알림이 선생님에게 전달됩니다.</span></td></tr>
+      <tr><td class="label">제품</td><td class="content"><strong>교실 이동 확인 프로젝트</strong><span class="small">학생의 QR 체크인과 선생님의 도착 확인을 연결하는 웹사이트입니다.</span></td></tr>
+    </table>
+
+    <h2>2. 어디까지 만들까</h2>
+    <table class="details">
+      <tr class="requirements"><td class="label">요구사항</td><td class="content"><span class="hint">AI가 구현해야 할 행동과 결과</span><ol><li>이동실별 QR 코드를 생성하고 이동실 정보를 연결합니다.</li><li>학생이 QR 코드를 찍으면 학생과 이동실 정보를 검증합니다.</li><li>학생의 요청으로 선생님에게 도착 알림이 가도록 설정합니다.</li></ol></td></tr>
+      <tr class="verify"><td class="label">검증 조건</td><td class="content"><span class="hint">실행해 보고 확인할 수 있는 조건</span><ol><li>QR 코드가 이동실 정보와 함께 제대로 생성되는가?</li><li>학생이 QR 코드를 찍었을 때 제대로 인식되는가?</li><li>선생님에게 “김OO이 1번 실습실에 도착했어요” 알림이 제대로 가는가?</li></ol></td></tr>
+      <tr class="data"><td class="label">데이터</td><td class="content">학생별 최근 3개월간 어느 실에 자주 갔는지와 방문 횟수를 기록합니다.</td></tr>
+      <tr class="scope"><td class="label">개발 범위</td><td class="content"><div class="scope-line"><b>포함</b> QR 코드 생성·검증, 학생 도착 확인, 선생님 알림, 최근 3개월 이동 기록</div><div class="scope-line"><b>제외</b> 없음</div></td></tr>
+    </table>
+  </div>
+</body>
+</html>
