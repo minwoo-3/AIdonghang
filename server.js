@@ -56,6 +56,12 @@ db.exec(`
     created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (room_id) REFERENCES rooms(id)
   );
+  CREATE TABLE IF NOT EXISTS sessions (
+    token TEXT PRIMARY KEY,
+    teacher_id INTEGER NOT NULL,
+    expires_at INTEGER NOT NULL,
+    FOREIGN KEY (teacher_id) REFERENCES teachers(id)
+  );
 `);
 
 const ensureColumn = (table, column, definition = 'TEXT') => {
@@ -85,9 +91,15 @@ const roomSeeds = [['1번 실습실', '101'], ['2번 실습실', '102'], ['3번 
 const insertRoom = db.prepare('INSERT OR IGNORE INTO rooms (name, number, code) VALUES (?, ?, ?)');
 roomSeeds.forEach(([name, number]) => insertRoom.run(name, number, `LOG-${number}`));
 
-const sessions = new Map();
-const createSession = (teacherId) => { const token = crypto.randomBytes(32).toString('hex'); sessions.set(token, { teacherId, createdAt: Date.now() }); return token; };
-const getSession = (req) => { const token = req.headers.cookie?.match(/(?:^|; )loggo_session=([^;]+)/)?.[1]; return token ? sessions.get(token) : null; };
+const createSession = (teacherId) => { const token = crypto.randomBytes(32).toString('hex'); db.prepare('INSERT INTO sessions (token, teacher_id, expires_at) VALUES (?, ?, ?)').run(token, teacherId, Date.now() + 1000 * 60 * 60 * 12); return token; };
+const getSession = (req) => {
+  const token = req.headers.cookie?.match(/(?:^|; )loggo_session=([^;]+)/)?.[1];
+  if (!token) return null;
+  const session = db.prepare('SELECT teacher_id AS teacherId, expires_at AS expiresAt FROM sessions WHERE token = ?').get(token);
+  if (!session) return null;
+  if (session.expiresAt < Date.now()) { db.prepare('DELETE FROM sessions WHERE token = ?').run(token); return null; }
+  return session;
+};
 const requireTeacher = (req, res, next) => { const session = getSession(req); if (!session) return res.status(401).json({ error: '로그인이 필요합니다.' }); req.teacher = session; next(); };
 const isoNow = () => new Date().toISOString();
 const roomByCode = (code) => db.prepare('SELECT * FROM rooms WHERE code = ?').get(String(code || '').trim().toUpperCase());
@@ -124,7 +136,7 @@ app.post('/api/auth/login', (req, res) => {
 
 app.post('/api/auth/logout', (req, res) => {
   const token = req.headers.cookie?.match(/(?:^|; )loggo_session=([^;]+)/)?.[1];
-  if (token) sessions.delete(token);
+  if (token) db.prepare('DELETE FROM sessions WHERE token = ?').run(token);
   res.setHeader('Set-Cookie', 'loggo_session=; HttpOnly; Path=/; SameSite=Lax; Max-Age=0');
   res.json({ ok: true });
 });
