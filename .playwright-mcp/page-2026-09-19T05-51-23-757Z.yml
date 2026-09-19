@@ -1,0 +1,49 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - img "LoG고 로고" [ref=e4]
+      - generic [ref=e5]:
+        - text: LoG고
+        - generic [ref=e6]: CLASSROOM CHECK
+    - generic [ref=e7]:
+      - generic [ref=e8]: 교사 계정 연결됨
+      - generic [ref=e10]: 선생님
+      - button "로그아웃" [ref=e11] [cursor=pointer]
+  - main [ref=e12]:
+    - generic [ref=e13]:
+      - generic [ref=e14]:
+        - generic [ref=e15]:
+          - generic [ref=e16]: 소마고A · 야간 자율학습
+          - heading "교실 이동 확인" [level=1] [ref=e17]
+          - paragraph [ref=e18]: 학생 신청과 도착 기록만 간결하게 확인합니다.
+        - generic [ref=e19]:
+          - button "학생 화면" [ref=e20] [cursor=pointer]
+          - button "+ 이동실 QR 만들기" [ref=e21] [cursor=pointer]
+      - generic [ref=e22]:
+        - article [ref=e23]:
+          - generic [ref=e24]: 오늘 도착한 학생
+          - generic [ref=e25]: "0"
+          - generic [ref=e26]: 실시간 도착 기록
+        - article [ref=e27]:
+          - generic [ref=e28]: 운영 중인 이동실
+          - generic [ref=e29]: "0"
+          - generic [ref=e30]: QR 코드 발급 완료
+      - generic [ref=e33]:
+        - generic [ref=e34]:
+          - heading "이동실 QR 코드" [level=2] [ref=e35]
+          - paragraph [ref=e36]: QR은 하루에 한 번 바뀝니다. 크게 열어 출력해 주세요.
+        - button "새 QR 생성" [ref=e37] [cursor=pointer]
+      - generic [ref=e39]:
+        - generic [ref=e40]:
+          - generic [ref=e41]:
+            - heading "이동 신청 · 도착 기록" [level=2] [ref=e42]
+            - paragraph [ref=e43]: 학생이 어디로 신청했고 실제 어디에 도착했는지 확인합니다.
+          - generic [ref=e44]: DATABASE · 3 MONTHS
+        - generic [ref=e45]:
+          - generic [ref=e47]:
+            - text: 최근 이동 신청
+            - generic [ref=e48]: REQUESTS
+          - generic [ref=e50]:
+            - text: 최근 도착 기록
+            - generic [ref=e51]: ARRIVALS
+  - status [ref=e52]

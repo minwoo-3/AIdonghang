@@ -73,6 +73,8 @@ ensureColumn('visits', 'period');
 ensureColumn('visits', 'confirmed', 'INTEGER NOT NULL DEFAULT 0');
 ensureColumn('notifications', 'student_id');
 ensureColumn('notifications', 'period');
+ensureColumn('rooms', 'qr_token');
+ensureColumn('rooms', 'qr_day');
 db.prepare("UPDATE move_requests SET status = 'pending' WHERE status = 'requested'").run();
 
 const seedTeacher = db.prepare('SELECT id FROM teachers WHERE email = ?').get('teacher@loggo.local');
@@ -89,6 +91,17 @@ const getSession = (req) => { const token = req.headers.cookie?.match(/(?:^|; )l
 const requireTeacher = (req, res, next) => { const session = getSession(req); if (!session) return res.status(401).json({ error: '로그인이 필요합니다.' }); req.teacher = session; next(); };
 const isoNow = () => new Date().toISOString();
 const roomByCode = (code) => db.prepare('SELECT * FROM rooms WHERE code = ?').get(String(code || '').trim().toUpperCase());
+const todayKey = () => new Date().toISOString().slice(0, 10);
+const dailyRoomToken = (room) => {
+  const day = todayKey();
+  if (!room.qr_token || room.qr_day !== day) {
+    const token = crypto.randomBytes(18).toString('hex');
+    db.prepare('UPDATE rooms SET qr_token = ?, qr_day = ? WHERE id = ?').run(token, day, room.id);
+    room.qr_token = token;
+    room.qr_day = day;
+  }
+  return room.qr_token;
+};
 
 app.use(express.json());
 app.use(express.static(ROOT));
@@ -119,13 +132,14 @@ app.post('/api/auth/logout', (req, res) => {
 app.get('/api/rooms', (req, res) => res.json({ rooms: db.prepare('SELECT id, name, number, code FROM rooms ORDER BY id').all() }));
 
 app.get('/api/rooms/:id/qr', async (req, res) => {
-  const room = db.prepare('SELECT id, name, number, code FROM rooms WHERE id = ?').get(req.params.id);
+  const room = db.prepare('SELECT id, name, number, code, qr_token, qr_day FROM rooms WHERE id = ?').get(req.params.id);
   if (!room) return res.status(404).json({ error: '이동실을 찾을 수 없습니다.' });
+  const token = dailyRoomToken(room);
   const publicHost = req.get('x-forwarded-host') || req.get('host');
   const publicProtocol = (req.get('x-forwarded-proto') || req.protocol).split(',')[0].trim();
-  const scanUrl = `${publicProtocol}://${publicHost}/?student=1&code=${encodeURIComponent(room.code)}`;
+  const scanUrl = `${publicProtocol}://${publicHost}/?student=1&code=${encodeURIComponent(room.code)}&token=${encodeURIComponent(token)}`;
   const dataUrl = await QRCode.toDataURL(scanUrl, { width: 900, margin: 2, color: { dark: '#702542', light: '#ffffff' } });
-  res.json({ room, scanUrl, dataUrl });
+  res.json({ room, scanUrl, dataUrl, qrDay: todayKey() });
 });
 
 app.post('/api/rooms', requireTeacher, (req, res) => {
@@ -159,9 +173,10 @@ app.get('/api/requests/:id', (req, res) => {
 });
 
 app.post('/api/checkins', (req, res) => {
-  const { studentGrade, studentClass, studentName, studentId, period, roomCode } = req.body || {};
+  const { studentGrade, studentClass, studentName, studentId, period, roomCode, qrToken } = req.body || {};
   const room = roomByCode(roomCode);
-  if (!studentGrade || !studentClass || !studentName || !studentId || !['10', '11'].includes(String(period)) || !room) return res.status(400).json({ error: '교시, 학년, 반, 이름, 학번, QR 코드를 모두 확인해 주세요.' });
+  if (!studentGrade || !studentClass || !studentName || !studentId || !['10', '11'].includes(String(period)) || !room || !qrToken) return res.status(400).json({ error: '오늘 발급된 QR을 찍은 뒤 인증해 주세요.' });
+  if (dailyRoomToken(room) !== String(qrToken)) return res.status(403).json({ error: '만료되었거나 다른 날의 QR입니다. 오늘 출력된 QR을 다시 찍어 주세요.' });
   const cleanGrade = String(studentGrade).trim();
   const cleanClass = String(studentClass).trim();
   const cleanName = String(studentName).trim();
