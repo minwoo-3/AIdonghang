@@ -58,13 +58,18 @@ db.exec(`
   );
 `);
 
-const ensureColumn = (table, column) => {
+const ensureColumn = (table, column, definition = 'TEXT') => {
   const columns = db.prepare(`PRAGMA table_info(${table})`).all();
-  if (!columns.some((item) => item.name === column)) db.exec(`ALTER TABLE ${table} ADD COLUMN ${column} TEXT`);
+  if (!columns.some((item) => item.name === column)) db.exec(`ALTER TABLE ${table} ADD COLUMN ${column} ${definition}`);
 };
 ensureColumn('move_requests', 'student_id');
+ensureColumn('move_requests', 'period');
 ensureColumn('visits', 'student_id');
+ensureColumn('visits', 'period');
+ensureColumn('visits', 'confirmed', 'INTEGER NOT NULL DEFAULT 0');
 ensureColumn('notifications', 'student_id');
+ensureColumn('notifications', 'period');
+db.prepare("UPDATE move_requests SET status = 'pending' WHERE status = 'requested'").run();
 
 const seedTeacher = db.prepare('SELECT id FROM teachers WHERE email = ?').get('teacher@loggo.local');
 if (!seedTeacher) {
@@ -130,37 +135,54 @@ app.post('/api/rooms', requireTeacher, (req, res) => {
 });
 
 app.post('/api/requests', (req, res) => {
-  const { studentName, studentId, roomCode } = req.body || {};
+  const { studentName, studentId, period, roomCode } = req.body || {};
   const room = roomByCode(roomCode);
-  if (!studentName || !studentId || !room) return res.status(400).json({ error: '학생 이름, 학번, 이동실을 모두 확인해 주세요.' });
+  if (!studentName || !studentId || !['10', '11'].includes(String(period)) || !room) return res.status(400).json({ error: '교시, 학생 이름, 학번, 이동실을 모두 확인해 주세요.' });
   const cleanName = String(studentName).trim();
   const cleanId = String(studentId).trim();
-  const result = db.prepare('INSERT INTO move_requests (student_name, student_id, room_id) VALUES (?, ?, ?)').run(cleanName, cleanId, room.id);
-  db.prepare('INSERT INTO notifications (kind, student_name, student_id, room_id, message) VALUES (?, ?, ?, ?, ?)').run('request', cleanName, cleanId, room.id, `${cleanName}(${cleanId}) 학생이 ${room.name}으로 이동 신청을 했어요.`);
+  const cleanPeriod = String(period);
+  const result = db.prepare('INSERT INTO move_requests (student_name, student_id, period, room_id, status) VALUES (?, ?, ?, ?, ?)').run(cleanName, cleanId, cleanPeriod, room.id, 'pending');
+  db.prepare('INSERT INTO notifications (kind, student_name, student_id, period, room_id, message) VALUES (?, ?, ?, ?, ?, ?)').run('request', cleanName, cleanId, cleanPeriod, room.id, `${cleanName}(${cleanId}) 학생이 ${cleanPeriod}교시 ${room.name}으로 이동 신청을 했어요.`);
   res.json({ requestId: result.lastInsertRowid, room: { name: room.name, code: room.code } });
 });
 
 app.post('/api/checkins', (req, res) => {
-  const { studentName, studentId, roomCode } = req.body || {};
+  const { studentName, studentId, period, roomCode } = req.body || {};
   const room = roomByCode(roomCode);
-  if (!studentName || !studentId || !room) return res.status(400).json({ error: '이름, 학번, QR 코드를 모두 확인해 주세요.' });
+  if (!studentName || !studentId || !['10', '11'].includes(String(period)) || !room) return res.status(400).json({ error: '교시, 이름, 학번, QR 코드를 모두 확인해 주세요.' });
   const cleanName = String(studentName).trim();
   const cleanId = String(studentId).trim();
-  const request = db.prepare(`SELECT * FROM move_requests WHERE student_name = ? AND student_id = ? AND room_id = ? AND status = 'requested' ORDER BY id DESC LIMIT 1`).get(cleanName, cleanId, room.id);
+  const cleanPeriod = String(period);
+  const request = db.prepare(`SELECT * FROM move_requests WHERE student_name = ? AND student_id = ? AND period = ? AND room_id = ? AND status = 'approved' ORDER BY id DESC LIMIT 1`).get(cleanName, cleanId, cleanPeriod, room.id);
+  if (!request) return res.status(403).json({ error: '아직 선생님이 해당 이동 신청을 승인하지 않았거나 신청 정보가 없습니다.' });
   const now = isoNow();
-  const visit = db.prepare('INSERT INTO visits (student_name, student_id, room_id, request_id, created_at) VALUES (?, ?, ?, ?, ?)').run(cleanName, cleanId, room.id, request?.id || null, now);
-  if (request) db.prepare('UPDATE move_requests SET status = \'arrived\' WHERE id = ?').run(request.id);
-  db.prepare('INSERT INTO notifications (kind, student_name, student_id, room_id, message, created_at) VALUES (?, ?, ?, ?, ?, ?)').run('arrival', cleanName, cleanId, room.id, `${cleanName}(${cleanId}) 학생이 ${room.name}에 도착했어요.`, now);
+  const visit = db.prepare('INSERT INTO visits (student_name, student_id, period, room_id, request_id, created_at, confirmed) VALUES (?, ?, ?, ?, ?, ?, 0)').run(cleanName, cleanId, cleanPeriod, room.id, request.id, now);
+  db.prepare('UPDATE move_requests SET status = \'arrived\' WHERE id = ?').run(request.id);
+  db.prepare('INSERT INTO notifications (kind, student_name, student_id, period, room_id, message, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)').run('arrival', cleanName, cleanId, cleanPeriod, room.id, `${cleanName}(${cleanId}) 학생이 ${cleanPeriod}교시 ${room.name}에 도착했어요.`, now);
   res.json({ visitId: visit.lastInsertRowid, message: `${cleanName} 학생의 ${room.name} 도착 알림을 선생님에게 보냈어요.`, room: { name: room.name, code: room.code } });
 });
 
 app.get('/api/dashboard', requireTeacher, (req, res) => {
   const rooms = db.prepare('SELECT id, name, number, code FROM rooms ORDER BY id').all();
-  const notifications = db.prepare(`SELECT n.id, n.kind, n.student_name AS studentName, n.student_id AS studentId, n.message, n.is_read AS isRead, n.created_at AS createdAt, r.name AS roomName, r.code FROM notifications n JOIN rooms r ON r.id = n.room_id ORDER BY n.id DESC LIMIT 30`).all();
-  const visits = db.prepare(`SELECT v.id, v.student_name AS studentName, v.student_id AS studentId, v.created_at AS createdAt, r.name AS roomName, r.code FROM visits v JOIN rooms r ON r.id = v.room_id WHERE datetime(v.created_at) >= datetime('now', '-3 months') ORDER BY v.id DESC LIMIT 100`).all();
-  const requests = db.prepare(`SELECT m.id, m.student_name AS studentName, m.student_id AS studentId, m.status, m.created_at AS createdAt, r.name AS roomName, r.code FROM move_requests m JOIN rooms r ON r.id = m.room_id ORDER BY m.id DESC LIMIT 30`).all();
+  const notifications = db.prepare(`SELECT n.id, n.kind, n.student_name AS studentName, n.student_id AS studentId, n.period, n.message, n.is_read AS isRead, n.created_at AS createdAt, r.name AS roomName, r.code FROM notifications n JOIN rooms r ON r.id = n.room_id ORDER BY n.id DESC LIMIT 30`).all();
+  const visits = db.prepare(`SELECT v.id, v.student_name AS studentName, v.student_id AS studentId, v.period, v.confirmed, v.created_at AS createdAt, r.name AS roomName, r.code FROM visits v JOIN rooms r ON r.id = v.room_id WHERE datetime(v.created_at) >= datetime('now', '-3 months') ORDER BY v.id DESC LIMIT 100`).all();
+  const requests = db.prepare(`SELECT m.id, m.student_name AS studentName, m.student_id AS studentId, m.period, m.status, m.created_at AS createdAt, r.name AS roomName, r.code FROM move_requests m JOIN rooms r ON r.id = m.room_id ORDER BY m.id DESC LIMIT 30`).all();
   const stats = db.prepare(`SELECT r.name, COUNT(v.id) AS count FROM rooms r LEFT JOIN visits v ON v.room_id = r.id AND datetime(v.created_at) >= datetime('now', '-3 months') GROUP BY r.id ORDER BY count DESC`).all();
   res.json({ rooms, notifications, visits, requests, stats });
+});
+
+app.post('/api/requests/:id/status', requireTeacher, (req, res) => {
+  const status = String(req.body?.status || '');
+  if (!['approved', 'rejected'].includes(status)) return res.status(400).json({ error: '올바른 승인 상태가 아닙니다.' });
+  const result = db.prepare(`UPDATE move_requests SET status = ? WHERE id = ? AND status IN ('pending', 'requested')`).run(status, req.params.id);
+  if (!result.changes) return res.status(404).json({ error: '대기 중인 신청을 찾을 수 없습니다.' });
+  res.json({ ok: true, status });
+});
+
+app.post('/api/visits/:id/confirm', requireTeacher, (req, res) => {
+  const result = db.prepare('UPDATE visits SET confirmed = 1 WHERE id = ?').run(req.params.id);
+  if (!result.changes) return res.status(404).json({ error: '도착 기록을 찾을 수 없습니다.' });
+  res.json({ ok: true });
 });
 
 app.post('/api/notifications/read', requireTeacher, (req, res) => { db.prepare('UPDATE notifications SET is_read = 1 WHERE id = ?').run(req.body?.id); res.json({ ok: true }); });
