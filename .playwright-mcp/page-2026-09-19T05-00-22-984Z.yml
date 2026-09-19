@@ -1,0 +1,130 @@
+- generic [ref=e2]:
+  - banner [ref=e3]:
+    - generic [ref=e6]:
+      - text: LoG고
+      - generic [ref=e7]: CLASSROOM CHECK
+    - generic [ref=e8]:
+      - generic [ref=e9]: 운영 중
+      - generic "선생님 계정" [ref=e11]: 선생님
+  - main [ref=e12]:
+    - generic [ref=e13]:
+      - generic [ref=e14]:
+        - generic [ref=e15]: 소마고A · 야간 자율학습
+        - heading "교실 이동 확인" [level=1] [ref=e16]
+        - paragraph [ref=e17]: 학생이 QR을 찍으면, 도착 소식이 바로 도착합니다.
+      - generic [ref=e18]:
+        - button "학생 체크인" [ref=e19] [cursor=pointer]
+        - button "+ 이동실 QR 만들기" [ref=e20] [cursor=pointer]
+    - navigation "서비스 화면 선택" [ref=e21]:
+      - button "선생님 대시보드" [ref=e22] [cursor=pointer]
+      - button "학생 체크인" [ref=e23] [cursor=pointer]
+    - region "선생님 대시보드" [ref=e24]:
+      - generic [ref=e25]:
+        - article [ref=e26]:
+          - generic [ref=e27]: 오늘 체크인
+          - generic [ref=e28]: "3"
+          - generic [ref=e29]: 실시간 도착 기록
+        - article [ref=e30]:
+          - generic [ref=e31]: 운영 중인 이동실
+          - generic [ref=e32]: "4"
+          - generic [ref=e33]: QR 코드 발급 완료
+        - article [ref=e34]:
+          - generic [ref=e35]: 확인 대기 알림
+          - generic [ref=e36]: "3"
+          - generic [ref=e37]: 최근 도착 순서
+        - article [ref=e38]:
+          - generic [ref=e39]: 가장 많이 간 실
+          - generic [ref=e40]: 1번 실
+          - generic [ref=e41]: 최근 3개월 기준
+      - generic [ref=e42]:
+        - generic [ref=e43]:
+          - generic [ref=e44]:
+            - generic [ref=e45]:
+              - heading "이동실 QR 코드" [level=2] [ref=e46]
+              - paragraph [ref=e47]: 학생이 도착한 실의 QR을 스캔하도록 안내하세요.
+            - button "새 QR 생성" [ref=e48] [cursor=pointer]
+          - generic [ref=e49]:
+            - article [ref=e50]:
+              - generic [ref=e51]:
+                - generic [ref=e52]:
+                  - generic [ref=e53]: ROOM 01
+                  - heading "1번 실습실" [level=3] [ref=e54]
+                  - text: 실 번호 101
+                - generic "사용 중" [ref=e55]
+              - generic "1번 실습실 QR 코드" [ref=e56]
+              - generic [ref=e498]:
+                - generic [ref=e499]: LOG-101
+                - button "코드 복사" [ref=e500] [cursor=pointer]
+            - article [ref=e501]:
+              - generic [ref=e502]:
+                - generic [ref=e503]:
+                  - generic [ref=e504]: ROOM 02
+                  - heading "2번 실습실" [level=3] [ref=e505]
+                  - text: 실 번호 102
+                - generic "사용 중" [ref=e506]
+              - generic "2번 실습실 QR 코드" [ref=e507]
+              - generic [ref=e949]:
+                - generic [ref=e950]: LOG-102
+                - button "코드 복사" [ref=e951] [cursor=pointer]
+            - article [ref=e952]:
+              - generic [ref=e953]:
+                - generic [ref=e954]:
+                  - generic [ref=e955]: ROOM 03
+                  - heading "3번 실습실" [level=3] [ref=e956]
+                  - text: 실 번호 103
+                - generic "사용 중" [ref=e957]
+              - generic "3번 실습실 QR 코드" [ref=e958]
+              - generic [ref=e1400]:
+                - generic [ref=e1401]: LOG-103
+                - button "코드 복사" [ref=e1402] [cursor=pointer]
+            - article [ref=e1403]:
+              - generic [ref=e1404]:
+                - generic [ref=e1405]:
+                  - generic [ref=e1406]: ROOM 04
+                  - heading "창의 융합실" [level=3] [ref=e1407]
+                  - text: 실 번호 201
+                - generic "사용 중" [ref=e1408]
+              - generic "창의 융합실 QR 코드" [ref=e1409]
+              - generic [ref=e1851]:
+                - generic [ref=e1852]: LOG-201
+                - button "코드 복사" [ref=e1853] [cursor=pointer]
+        - complementary [ref=e1854]:
+          - generic [ref=e1856]:
+            - heading "도착 알림" [level=2] [ref=e1857]
+            - paragraph [ref=e1858]: 학생이 체크인하면 이곳에 표시됩니다.
+          - generic [ref=e1859]:
+            - generic [ref=e1860]:
+              - generic [ref=e1861]: ✓
+              - generic [ref=e1862]:
+                - strong [ref=e1863]: 김민우이(가) 1번 실습실에 도착했어요
+                - generic [ref=e1864]: 14분 전 · LOG-101 인증 완료
+            - generic [ref=e1865]:
+              - generic [ref=e1866]: ✓
+              - generic [ref=e1867]:
+                - strong [ref=e1868]: 정성원이(가) 창의 융합실에 도착했어요
+                - generic [ref=e1869]: 38분 전 · LOG-201 인증 완료
+            - generic [ref=e1870]:
+              - generic [ref=e1871]: ✓
+              - generic [ref=e1872]:
+                - strong [ref=e1873]: 조현이(가) 2번 실습실에 도착했어요
+                - generic [ref=e1874]: 1시간 전 · LOG-102 인증 완료
+      - generic [ref=e1875]:
+        - generic [ref=e1876]:
+          - generic [ref=e1877]:
+            - heading "최근 3개월 이동 기록" [level=2] [ref=e1878]
+            - paragraph [ref=e1879]: 학생별 어느 실을 자주 방문했는지 확인합니다.
+          - generic [ref=e1880]: DATA · 3 MONTHS
+        - generic [ref=e1881]:
+          - generic [ref=e1882]:
+            - generic [ref=e1883]: 1번 실습실
+            - generic [ref=e1886]: 1회
+          - generic [ref=e1887]:
+            - generic [ref=e1888]: 2번 실습실
+            - generic [ref=e1891]: 1회
+          - generic [ref=e1892]:
+            - generic [ref=e1893]: 3번 실습실
+            - generic [ref=e1896]: 0회
+          - generic [ref=e1897]:
+            - generic [ref=e1898]: 창의 융합실
+            - generic [ref=e1901]: 1회
+  - status [ref=e1902]

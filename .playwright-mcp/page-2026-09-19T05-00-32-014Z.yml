@@ -1,0 +1,79 @@
+- generic [ref=e2]:
+  - banner [ref=e3]:
+    - generic [ref=e6]:
+      - text: LoG고
+      - generic [ref=e7]: CLASSROOM CHECK
+    - generic [ref=e8]:
+      - generic [ref=e9]: 운영 중
+      - generic "선생님 계정" [ref=e11]: 선생님
+  - main [ref=e12]:
+    - generic [ref=e13]:
+      - generic [ref=e14]:
+        - generic [ref=e15]: 소마고A · 야간 자율학습
+        - heading "교실 이동 확인" [level=1] [ref=e16]
+        - paragraph [ref=e17]: 학생이 QR을 찍으면, 도착 소식이 바로 도착합니다.
+      - generic [ref=e18]:
+        - button "학생 체크인" [ref=e19] [cursor=pointer]
+        - button "+ 이동실 QR 만들기" [ref=e20] [cursor=pointer]
+    - navigation "서비스 화면 선택" [ref=e21]:
+      - button "선생님 대시보드" [ref=e22] [cursor=pointer]
+      - button "학생 체크인" [active] [ref=e23] [cursor=pointer]
+    - region "학생 체크인" [ref=e1903]:
+      - generic [ref=e1904]:
+        - article [ref=e1905]:
+          - generic [ref=e1906]: STUDENT CHECK-IN
+          - heading "도착했나요? QR을 찍고 알려주세요." [level=2] [ref=e1907]:
+            - text: 도착했나요?
+            - text: QR을 찍고 알려주세요.
+          - paragraph [ref=e1908]: 이동실에 붙어 있는 QR 코드의 값을 입력하면 담당 선생님에게 도착 알림이 전송됩니다.
+          - generic [ref=e1909]:
+            - generic [ref=e1910]:
+              - generic [ref=e1911]: "01"
+              - generic [ref=e1912]: 이동한 실의 QR 코드 확인
+            - generic [ref=e1913]:
+              - generic [ref=e1914]: "02"
+              - generic [ref=e1915]: 내 이름과 QR 코드값 입력
+            - generic [ref=e1916]:
+              - generic [ref=e1917]: "03"
+              - generic [ref=e1918]: 선생님에게 도착 알림 전송
+        - generic [ref=e1919]:
+          - heading "학생 도착 알리기" [level=2] [ref=e1920]
+          - paragraph [ref=e1921]: QR 카드 아래에 적힌 코드를 입력하거나, 아래 실을 눌러 자동으로 선택하세요.
+          - generic [ref=e1922]:
+            - generic [ref=e1923]:
+              - generic [ref=e1924]:
+                - generic [ref=e1925]: 학생 이름
+                - textbox "학생 이름" [ref=e1926]:
+                  - /placeholder: "예: 김민우"
+              - generic [ref=e1927]:
+                - generic [ref=e1928]: QR 코드값
+                - textbox "QR 코드값" [ref=e1929]:
+                  - /placeholder: "예: LOG-101"
+                - paragraph [ref=e1930]: QR 코드 아래의 LOG-코드입니다.
+            - generic [ref=e1931]:
+              - button "1번 실습실 · LOG-101" [ref=e1932] [cursor=pointer]
+              - button "2번 실습실 · LOG-102" [ref=e1933] [cursor=pointer]
+              - button "3번 실습실 · LOG-103" [ref=e1934] [cursor=pointer]
+              - button "창의 융합실 · LOG-201" [ref=e1935] [cursor=pointer]
+            - button "도착 알림 보내기" [ref=e1936] [cursor=pointer]
+      - generic [ref=e1938]:
+        - generic [ref=e1940]:
+          - heading "최근 체크인 기록" [level=2] [ref=e1941]
+          - paragraph [ref=e1942]: 방금 등록된 이동 기록을 확인할 수 있습니다.
+        - generic [ref=e1943]:
+          - generic [ref=e1944]:
+            - generic [ref=e1945]: "1"
+            - generic [ref=e1946]:
+              - strong [ref=e1947]: 1번 실습실 체크인 완료
+              - generic [ref=e1948]: 김민우 · 14분 전
+          - generic [ref=e1949]:
+            - generic [ref=e1950]: 창
+            - generic [ref=e1951]:
+              - strong [ref=e1952]: 창의 융합실 체크인 완료
+              - generic [ref=e1953]: 정성원 · 38분 전
+          - generic [ref=e1954]:
+            - generic [ref=e1955]: "2"
+            - generic [ref=e1956]:
+              - strong [ref=e1957]: 2번 실습실 체크인 완료
+              - generic [ref=e1958]: 조현 · 1시간 전
+  - status [ref=e1902]

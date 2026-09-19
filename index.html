@@ -3,261 +3,161 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>LoG고 | 교실 이동 확인 프로젝트</title>
-  <meta name="description" content="소마고A 팀의 교실 이동 확인 프로젝트 기획서" />
+  <title>LoG고 | 교실 이동 확인</title>
+  <meta name="description" content="QR 코드로 야자시간 학생 이동을 확인하는 LoG고 교실 이동 확인 서비스" />
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%23236444'/%3E%3Ccircle cx='11' cy='11' r='4' fill='%23f5c86b'/%3E%3Ccircle cx='21' cy='21' r='4' fill='white'/%3E%3C/svg%3E" />
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Gowun+Dodum&family=Manrope:wght@500;600;700;800&display=swap');
-
-    :root {
-      --ink: #14211d;
-      --muted: #6e7b73;
-      --line: #dce4de;
-      --paper: #f7f9f5;
-      --card: #ffffff;
-      --green: #3d8b62;
-      --green-dark: #236444;
-      --mint: #e4f2e9;
-      --yellow: #f5c86b;
-      --shadow: 0 14px 40px rgba(45, 75, 58, .08);
-    }
-
-    * { box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
-    body {
-      margin: 0;
-      color: var(--ink);
-      background: var(--paper);
-      font-family: 'Gowun Dodum', sans-serif;
-      font-size: 17px;
-      line-height: 1.65;
-    }
-    button { font: inherit; }
-    .page-shell { overflow: hidden; }
-    .topbar {
-      width: min(1160px, calc(100% - 40px));
-      margin: 0 auto;
-      padding: 28px 0;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-family: 'Manrope', sans-serif;
-      font-size: 14px;
-      font-weight: 800;
-      letter-spacing: .04em;
-    }
-    .brand-mark {
-      width: 34px; height: 34px; flex: 0 0 auto; border-radius: 10px;
-      background: #f4a2bd url('assets/loggo-logo.png') no-repeat;
-      background-size: 128px auto; background-position: -7px -7px;
-      box-shadow: inset 0 0 0 1px rgba(20, 33, 29, .06);
-    }
-    .topbar-link { color: var(--muted); font-size: 14px; text-decoration: none; }
-    .topbar-link:hover { color: var(--green-dark); }
-
-    main { width: min(1160px, calc(100% - 40px)); margin: 0 auto 90px; }
-    .hero {
-      min-height: 480px;
-      padding: 74px 7% 64px;
-      position: relative;
-      display: grid;
-      grid-template-columns: 1.15fr .85fr;
-      gap: 50px;
-      align-items: center;
-      background: var(--green-dark);
-      color: #f7fbf8;
-      border-radius: 28px;
-      overflow: hidden;
-    }
-    .hero::before { content: ''; position: absolute; width: 430px; height: 430px; border: 1px solid rgba(255,255,255,.14); border-radius: 50%; right: 8%; top: -170px; }
-    .hero::after { content: ''; position: absolute; width: 250px; height: 250px; border: 1px solid rgba(255,255,255,.1); border-radius: 50%; right: 18%; bottom: -145px; }
-    .eyebrow { font-family: 'DM Mono', monospace; font-size: 13px; letter-spacing: .12em; color: #a8d2b7; }
-    h1 { margin: 16px 0 18px; max-width: 600px; font-family: 'Manrope', sans-serif; font-size: clamp(42px, 6vw, 76px); line-height: 1.03; letter-spacing: -.06em; }
-    .hero-copy { max-width: 510px; color: #c8e0cf; font-size: 19px; }
-    .hero-meta { margin-top: 34px; display: flex; flex-wrap: wrap; gap: 10px; }
-    .tag { padding: 8px 13px; border: 1px solid rgba(255,255,255,.2); border-radius: 999px; color: #e1f1e5; font-size: 14px; }
-    .hero-visual { z-index: 1; display: flex; justify-content: center; }
-    .qr-card { width: min(300px, 100%); padding: 23px; background: #f8fbf7; border-radius: 18px; color: var(--ink); transform: rotate(3deg); box-shadow: 0 25px 60px rgba(0,0,0,.18); }
-    .qr-top { display: flex; justify-content: space-between; align-items: center; font-family: 'DM Mono', monospace; font-size: 11px; color: var(--green); }
-    .qr-grid { margin: 21px auto 16px; width: 190px; height: 190px; display: grid; grid-template-columns: repeat(13, 1fr); gap: 4px; }
-    .qr-grid i { display: block; background: #173128; border-radius: 1px; }
-    .qr-grid i:nth-child(3n), .qr-grid i:nth-child(7n+2), .qr-grid i:nth-child(11n+1) { background: transparent; }
-    .qr-grid i:nth-child(13n+1), .qr-grid i:nth-child(13n+2), .qr-grid i:nth-child(13n+3), .qr-grid i:nth-child(13n+11), .qr-grid i:nth-child(13n+12), .qr-grid i:nth-child(13n+13), .qr-grid i:nth-child(1), .qr-grid i:nth-child(2), .qr-grid i:nth-child(3), .qr-grid i:nth-child(11), .qr-grid i:nth-child(12), .qr-grid i:nth-child(13) { background: #173128; }
-    .qr-title { margin: 0; font-family: 'Manrope', sans-serif; font-weight: 800; font-size: 19px; }
-    .qr-sub { margin: 3px 0 0; color: var(--muted); font-size: 13px; }
-
-    .section { margin-top: 78px; }
-    .section-heading { display: flex; justify-content: space-between; gap: 20px; align-items: end; margin-bottom: 22px; }
-    .section-number { color: var(--green); font: 500 13px 'DM Mono', monospace; letter-spacing: .1em; }
-    h2 { margin: 5px 0 0; font-family: 'Manrope', sans-serif; font-size: clamp(28px, 4vw, 42px); letter-spacing: -.05em; line-height: 1.1; }
-    .section-note { max-width: 340px; margin: 0; color: var(--muted); font-size: 15px; text-align: right; }
-    .intro-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-    .info-card { padding: 30px; min-height: 205px; background: var(--card); border: 1px solid var(--line); border-radius: 18px; box-shadow: var(--shadow); }
-    .info-card.wide { grid-column: 1 / -1; min-height: auto; }
-    .card-label { display: flex; align-items: center; gap: 9px; color: var(--green-dark); font: 500 12px 'DM Mono', monospace; letter-spacing: .08em; text-transform: uppercase; }
-    .dot { width: 8px; height: 8px; background: var(--yellow); border-radius: 50%; }
-    .info-card h3 { margin: 22px 0 8px; font-size: 23px; letter-spacing: -.04em; }
-    .info-card p { margin: 0; color: #53635a; }
-    .team-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
-    .member { padding: 9px 13px; background: var(--mint); border-radius: 9px; color: var(--green-dark); font-size: 15px; }
-
-    .flow { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; counter-reset: flow; }
-    .flow-card { position: relative; min-height: 220px; padding: 28px; border: 1px solid var(--line); border-radius: 18px; background: var(--card); }
-    .flow-card::before { counter-increment: flow; content: '0' counter(flow); color: #a7b5ab; font: 500 13px 'DM Mono', monospace; }
-    .flow-card h3 { margin: 27px 0 7px; font-size: 21px; }
-    .flow-card p { margin: 0; color: var(--muted); font-size: 15px; }
-    .flow-card .arrow { position: absolute; top: 28px; right: 26px; color: var(--green); font-size: 22px; }
-
-    .scope-grid { display: grid; grid-template-columns: 1.05fr .95fr; gap: 16px; }
-    .scope-card { padding: 30px; border-radius: 18px; background: var(--card); border: 1px solid var(--line); }
-    .scope-card.include { border-top: 4px solid var(--green); }
-    .scope-card.exclude { border-top: 4px solid var(--yellow); }
-    .scope-card h3 { margin: 0 0 20px; font-size: 21px; }
-    .scope-list, .check-list { padding: 0; margin: 0; list-style: none; }
-    .scope-list li { display: flex; gap: 12px; padding: 14px 0; border-top: 1px solid #edf1ed; color: #53635a; font-size: 15px; }
-    .scope-list li::before { content: ''; width: 7px; height: 7px; margin-top: 9px; flex: 0 0 auto; border-radius: 50%; background: var(--green); }
-    .exclude .scope-list li::before { background: var(--yellow); }
-
-    .check-panel { display: grid; grid-template-columns: .9fr 1.1fr; gap: 26px; padding: 35px; color: #f5fbf6; background: #1e332a; border-radius: 22px; }
-    .check-panel h2 { color: #f5fbf6; }
-    .check-panel .section-number { color: #a8d2b7; }
-    .check-intro p { color: #b4cbb9; }
-    .check-list { display: grid; gap: 10px; }
-    .check-item { width: 100%; display: flex; align-items: center; gap: 13px; padding: 15px 16px; border: 1px solid rgba(255,255,255,.13); border-radius: 11px; background: rgba(255,255,255,.05); color: #e6f1e8; text-align: left; cursor: pointer; transition: background .2s, border-color .2s, transform .2s; }
-    .check-item:hover { transform: translateX(3px); border-color: #80b894; }
-    .check-item[aria-checked="true"] { background: #315c43; border-color: #75b98b; }
-    .check-icon { width: 22px; height: 22px; display: grid; place-items: center; flex: 0 0 auto; border: 1px solid #83a78d; border-radius: 50%; color: transparent; font: 700 14px 'Manrope', sans-serif; }
-    .check-item[aria-checked="true"] .check-icon { background: #9bd0a8; border-color: #9bd0a8; color: #1e332a; }
-    .data-band { margin-top: 16px; padding: 26px 30px; display: flex; justify-content: space-between; align-items: center; gap: 20px; background: var(--mint); border-radius: 18px; }
-    .data-band h3 { margin: 0 0 4px; font-size: 20px; }
-    .data-band p { margin: 0; color: #53635a; font-size: 15px; }
-    .data-badge { padding: 10px 13px; color: var(--green-dark); border: 1px solid #b9d9c3; border-radius: 10px; font: 500 12px 'DM Mono', monospace; white-space: nowrap; }
-    footer { width: min(1160px, calc(100% - 40px)); margin: 0 auto; padding: 36px 0 58px; display: flex; justify-content: space-between; color: var(--muted); border-top: 1px solid var(--line); font-size: 14px; }
-    .print-button { border: 0; padding: 10px 15px; color: var(--green-dark); background: var(--mint); border-radius: 8px; cursor: pointer; }
-    .print-button:hover { background: #d1e9d9; }
-    @media (max-width: 760px) {
-      body { font-size: 16px; }
-      .topbar, main, footer { width: min(100% - 28px, 1160px); }
-      .topbar { padding: 19px 0; }
-      .hero { display: block; padding: 48px 26px 35px; border-radius: 20px; }
-      .hero-copy { font-size: 17px; }
-      .hero-visual { margin-top: 38px; }
-      .qr-card { width: 245px; }
-      .qr-grid { width: 155px; height: 155px; }
-      .section { margin-top: 54px; }
-      .section-heading { display: block; }
-      .section-note { margin-top: 13px; text-align: left; }
-      .intro-grid, .flow, .scope-grid, .check-panel { grid-template-columns: 1fr; }
-      .info-card.wide { grid-column: auto; }
-      .check-panel { padding: 28px 22px; }
-      .data-band { display: block; padding: 23px; }
-      .data-badge { display: inline-block; margin-top: 17px; }
-      footer { display: block; }
-      .print-button { margin-top: 14px; }
-    }
-    @media print {
-      body { background: #fff; }
-      .topbar-link, .print-button { display: none; }
-      .hero { color: #14211d; background: #e4f2e9; }
-      .hero-copy, .tag { color: #53635a; }
-      .tag { border-color: #b9d9c3; }
-      .check-panel { color: #14211d; background: #e4f2e9; }
-      .check-panel h2 { color: #14211d; }
-      .check-panel .section-number, .check-intro p, .check-item { color: #53635a; }
-      .check-item { border-color: #b9d9c3; background: #fff; }
-      footer { padding-bottom: 0; }
-    }
+    @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Gowun+Dodum&family=Manrope:wght@600;700;800&display=swap');
+    :root { --ink:#18251f; --muted:#748079; --line:#dce5de; --paper:#f5f8f4; --card:#fff; --green:#277348; --deep:#173d2c; --mint:#e4f1e8; --pink:#efa1ba; --yellow:#f4c969; --red:#d96868; --shadow:0 12px 34px rgba(36,73,53,.08); }
+    * { box-sizing:border-box; }
+    body { margin:0; color:var(--ink); background:var(--paper); font-family:'Gowun Dodum',sans-serif; font-size:16px; line-height:1.55; }
+    button, input { font:inherit; }
+    button { cursor:pointer; }
+    .app { min-height:100vh; }
+    .topbar { height:76px; padding:0 max(24px, calc((100% - 1240px) / 2)); display:flex; align-items:center; justify-content:space-between; background:rgba(255,255,255,.82); border-bottom:1px solid var(--line); position:sticky; top:0; z-index:10; backdrop-filter:blur(14px); }
+    .brand { display:flex; align-items:center; gap:11px; font:800 14px 'Manrope',sans-serif; letter-spacing:.03em; }
+    .brand-mark { width:34px; height:34px; flex:none; border-radius:10px; background:#f4a2bd url('assets/loggo-logo.png') no-repeat; background-size:128px auto; background-position:-7px -7px; box-shadow:inset 0 0 0 1px rgba(20,33,29,.06); }
+    .brand small { display:block; color:var(--muted); font:400 10px 'DM Mono',monospace; letter-spacing:.08em; }
+    .top-actions { display:flex; align-items:center; gap:14px; }
+    .status { display:flex; align-items:center; gap:7px; color:var(--green); font-size:13px; }
+    .status-dot { width:7px; height:7px; border-radius:50%; background:#41aa69; box-shadow:0 0 0 4px #dff3e5; }
+    .avatar { width:36px; height:36px; display:grid; place-items:center; border-radius:50%; background:var(--deep); color:#fff; font:700 12px 'Manrope',sans-serif; }
+    main { width:min(1240px, calc(100% - 48px)); margin:0 auto 80px; }
+    .hero { display:flex; align-items:flex-end; justify-content:space-between; gap:24px; padding:42px 0 34px; }
+    .kicker { color:var(--green); font:500 12px 'DM Mono',monospace; letter-spacing:.1em; }
+    h1,h2,h3,p { margin-top:0; }
+    h1 { margin:10px 0 8px; font:800 clamp(30px,4vw,48px)/1.1 'Manrope',sans-serif; letter-spacing:-.06em; }
+    .hero p { margin-bottom:0; color:var(--muted); }
+    .hero-actions { display:flex; gap:10px; }
+    .button { min-height:44px; padding:0 17px; border:1px solid var(--line); border-radius:10px; background:#fff; color:var(--ink); font-weight:700; transition:.18s ease; }
+    .button:hover { border-color:#a7c9b1; transform:translateY(-1px); }
+    .button.primary { border-color:var(--deep); background:var(--deep); color:#fff; }
+    .button.soft { border-color:#c6e0cd; background:var(--mint); color:var(--green); }
+    .tabs { display:flex; gap:5px; padding:5px; margin-bottom:22px; width:max-content; border:1px solid var(--line); border-radius:12px; background:#edf3ee; }
+    .tab { min-height:40px; padding:0 18px; border:0; border-radius:8px; background:transparent; color:var(--muted); font-weight:700; }
+    .tab.active { background:#fff; color:var(--deep); box-shadow:0 2px 8px rgba(30,65,45,.08); }
+    .view { display:none; }
+    .view.active { display:block; }
+    .stats { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:22px; }
+    .stat { padding:20px 21px; min-height:120px; border:1px solid var(--line); border-radius:16px; background:var(--card); box-shadow:var(--shadow); }
+    .stat-label { color:var(--muted); font-size:13px; }
+    .stat-value { margin-top:10px; font:800 31px/1 'Manrope',sans-serif; letter-spacing:-.06em; }
+    .stat-sub { margin-top:9px; color:var(--green); font-size:12px; }
+    .dashboard-grid { display:grid; grid-template-columns:minmax(0,1.4fr) minmax(320px,.6fr); gap:18px; align-items:start; }
+    .panel { border:1px solid var(--line); border-radius:16px; background:var(--card); box-shadow:var(--shadow); overflow:hidden; }
+    .panel-head { display:flex; justify-content:space-between; gap:14px; align-items:center; padding:20px 22px; border-bottom:1px solid var(--line); }
+    .panel-head h2 { margin:0; font:800 19px 'Manrope',sans-serif; letter-spacing:-.04em; }
+    .panel-head p { margin:3px 0 0; color:var(--muted); font-size:13px; }
+    .rooms { padding:16px; display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:13px; }
+    .room-card { padding:17px; border:1px solid var(--line); border-radius:13px; background:#fbfdfb; transition:.2s ease; }
+    .room-card:hover { border-color:#9cc8a8; transform:translateY(-2px); box-shadow:0 8px 20px rgba(39,115,72,.08); }
+    .room-top { display:flex; justify-content:space-between; align-items:start; }
+    .room-index { color:var(--green); font:500 11px 'DM Mono',monospace; }
+    .room-card h3 { margin:7px 0 1px; font-size:18px; }
+    .room-card small { color:var(--muted); }
+    .qr { width:102px; height:102px; margin:17px auto 14px; padding:8px; display:grid; grid-template-columns:repeat(21,1fr); gap:2px; border:1px solid #e0e8e1; border-radius:8px; background:#fff; }
+    .qr span { background:#19372a; border-radius:1px; }
+    .qr span.off { background:transparent; }
+    .room-footer { display:flex; justify-content:space-between; align-items:center; gap:8px; padding-top:12px; border-top:1px solid #e8efe9; }
+    .room-code { color:var(--green); font:500 11px 'DM Mono',monospace; }
+    .room-footer button { padding:5px 8px; border:1px solid #c8dfce; border-radius:6px; background:#fff; color:var(--green); font-size:11px; }
+    .notification-list { padding:8px 20px 16px; }
+    .notification { display:flex; gap:12px; padding:15px 0; border-bottom:1px solid #e9efea; }
+    .notification:last-child { border-bottom:0; }
+    .notice-icon { width:34px; height:34px; display:grid; place-items:center; flex:none; border-radius:10px; background:var(--mint); color:var(--green); font:800 13px 'Manrope',sans-serif; }
+    .notification strong { display:block; font-size:14px; }
+    .notification span { display:block; margin-top:2px; color:var(--muted); font-size:12px; }
+    .empty { padding:28px 0; color:var(--muted); text-align:center; font-size:13px; }
+    .student-layout { display:grid; grid-template-columns:minmax(0,.8fr) minmax(320px,1.2fr); gap:18px; }
+    .checkin-intro { padding:30px; color:#f3fbf5; border-radius:16px; background:var(--deep); overflow:hidden; position:relative; }
+    .checkin-intro::after { content:''; position:absolute; width:220px; height:220px; right:-80px; bottom:-100px; border:1px solid rgba(255,255,255,.18); border-radius:50%; }
+    .checkin-intro h2 { margin:12px 0 10px; font:800 29px/1.15 'Manrope',sans-serif; letter-spacing:-.06em; }
+    .checkin-intro p { position:relative; z-index:1; margin-bottom:28px; color:#b9d5c1; font-size:14px; }
+    .steps { display:grid; gap:11px; position:relative; z-index:1; }
+    .step { display:flex; gap:10px; align-items:center; color:#e1f0e5; font-size:13px; }
+    .step b { width:24px; height:24px; display:grid; place-items:center; border:1px solid #6eaa7e; border-radius:50%; color:#a9d9b4; font:500 11px 'DM Mono',monospace; }
+    .checkin-panel { padding:26px; border:1px solid var(--line); border-radius:16px; background:#fff; box-shadow:var(--shadow); }
+    .checkin-panel h2 { margin:0 0 4px; font:800 20px 'Manrope',sans-serif; letter-spacing:-.04em; }
+    .checkin-panel > p { margin-bottom:22px; color:var(--muted); font-size:13px; }
+    .form-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+    label { display:block; margin-bottom:7px; color:#526158; font-size:13px; font-weight:700; }
+    input { width:100%; height:46px; padding:0 13px; border:1px solid #cad9ce; border-radius:9px; color:var(--ink); outline:none; background:#fcfefc; }
+    input:focus { border-color:var(--green); box-shadow:0 0 0 3px #e0f0e4; }
+    .input-hint { margin:7px 0 0; color:var(--muted); font-size:11px; }
+    .quick-rooms { display:flex; flex-wrap:wrap; gap:7px; margin:20px 0; padding-top:19px; border-top:1px solid var(--line); }
+    .quick-rooms button { padding:8px 10px; border:1px solid #cfe0d3; border-radius:7px; background:#f5faf6; color:var(--green); font-size:12px; }
+    .form-message { min-height:22px; margin:13px 0 0; font-size:13px; }
+    .form-message.success { color:var(--green); }
+    .form-message.error { color:var(--red); }
+    .history-panel { margin-top:18px; }
+    .history { padding:18px 22px 22px; }
+    .history-row { display:grid; grid-template-columns:1fr 1.3fr 70px; align-items:center; gap:14px; padding:12px 0; border-bottom:1px solid #edf1ed; font-size:13px; }
+    .history-row:last-child { border-bottom:0; }
+    .bar-wrap { height:7px; border-radius:99px; background:#e8f0e9; overflow:hidden; }
+    .bar { height:100%; border-radius:99px; background:var(--green); }
+    .history-count { color:var(--green); text-align:right; font:500 12px 'DM Mono',monospace; }
+    .modal-backdrop { position:fixed; inset:0; display:none; place-items:center; padding:20px; background:rgba(12,30,20,.45); z-index:20; }
+    .modal-backdrop.open { display:grid; }
+    .modal { width:min(430px,100%); padding:25px; border-radius:16px; background:#fff; box-shadow:0 25px 80px rgba(0,0,0,.2); }
+    .modal h2 { margin:0 0 5px; font:800 21px 'Manrope',sans-serif; letter-spacing:-.05em; }
+    .modal > p { color:var(--muted); font-size:13px; margin-bottom:21px; }
+    .modal .field { margin-bottom:14px; }
+    .modal-actions { display:flex; justify-content:flex-end; gap:8px; margin-top:20px; }
+    .toast { position:fixed; left:50%; bottom:25px; z-index:30; padding:13px 17px; border-radius:10px; color:#fff; background:var(--deep); box-shadow:0 10px 30px rgba(0,0,0,.15); transform:translate(-50%, 100px); opacity:0; transition:.25s ease; font-size:14px; }
+    .toast.show { transform:translate(-50%,0); opacity:1; }
+    @media (max-width:820px) { .hero { display:block; padding:32px 0 25px; } .hero-actions { margin-top:21px; } .stats { grid-template-columns:repeat(2,1fr); } .dashboard-grid,.student-layout { grid-template-columns:1fr; } }
+    @media (max-width:560px) { .topbar { height:68px; padding:0 16px; } .brand small,.status { display:none; } main { width:calc(100% - 28px); } .hero h1 { font-size:32px; } .tabs { width:100%; } .tab { flex:1; padding:0 8px; font-size:13px; } .rooms { grid-template-columns:1fr; } .form-row { grid-template-columns:1fr; } .checkin-intro { padding:23px; } .checkin-panel { padding:21px; } .history-row { grid-template-columns:1fr 1fr 53px; gap:8px; } }
   </style>
 </head>
 <body>
-  <div class="page-shell">
+  <div class="app">
     <header class="topbar">
-      <div class="brand"><span class="brand-mark" aria-hidden="true"></span> LoG고 / PROJECT BRIEF</div>
-      <a class="topbar-link" href="#scope">기획 범위 보기 ↗</a>
+      <div class="brand"><span class="brand-mark" aria-hidden="true"></span><span>LoG고<small>CLASSROOM CHECK</small></span></div>
+      <div class="top-actions"><div class="status"><i class="status-dot"></i>운영 중</div><div class="avatar" aria-label="선생님 계정">선생님</div></div>
     </header>
-
     <main>
-      <section class="hero" aria-labelledby="page-title">
-        <div>
-          <div class="eyebrow">SOMAGO A · 2026 PROJECT</div>
-          <h1 id="page-title">교실 이동<br />확인 프로젝트</h1>
-          <p class="hero-copy">이동실의 QR 코드를 찍으면 학생의 도착을 선생님께 바로 알려주는 야간 자율학습 관리 서비스입니다.</p>
-          <div class="hero-meta"><span class="tag">QR 기반 확인</span><span class="tag">선생님 알림</span><span class="tag">이동 기록</span></div>
-        </div>
-        <div class="hero-visual" aria-label="1번 실습실 QR 코드 예시">
-          <div class="qr-card">
-            <div class="qr-top"><span>ROOM CHECK</span><span>NO. 01</span></div>
-            <div class="qr-grid" aria-hidden="true">
-              <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
-              <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
-              <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
-              <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
-              <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
-              <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
-              <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
-              <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
-              <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
-              <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
-              <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
-              <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
-              <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
-            </div>
-            <p class="qr-title">1번 실습실</p><p class="qr-sub">학생 도착 확인용</p>
-          </div>
-        </div>
+      <section class="hero"><div><div class="kicker">소마고A · 야간 자율학습</div><h1>교실 이동 확인</h1><p>학생이 QR을 찍으면, 도착 소식이 바로 도착합니다.</p></div><div class="hero-actions"><button class="button soft" id="studentShortcut">학생 체크인</button><button class="button primary" id="openRoomModal">+ 이동실 QR 만들기</button></div></section>
+      <nav class="tabs" aria-label="서비스 화면 선택"><button class="tab active" data-view="teacherView">선생님 대시보드</button><button class="tab" data-view="studentView">학생 체크인</button></nav>
+
+      <section class="view active" id="teacherView" aria-label="선생님 대시보드">
+        <div class="stats"><article class="stat"><div class="stat-label">오늘 체크인</div><div class="stat-value" id="todayCount">0</div><div class="stat-sub">실시간 도착 기록</div></article><article class="stat"><div class="stat-label">운영 중인 이동실</div><div class="stat-value" id="roomCount">0</div><div class="stat-sub">QR 코드 발급 완료</div></article><article class="stat"><div class="stat-label">확인 대기 알림</div><div class="stat-value" id="unreadCount">0</div><div class="stat-sub">최근 도착 순서</div></article><article class="stat"><div class="stat-label">가장 많이 간 실</div><div class="stat-value" id="topRoom">-</div><div class="stat-sub">최근 3개월 기준</div></article></div>
+        <div class="dashboard-grid"><section class="panel"><div class="panel-head"><div><h2>이동실 QR 코드</h2><p>학생이 도착한 실의 QR을 스캔하도록 안내하세요.</p></div><button class="button soft" id="openRoomModal2">새 QR 생성</button></div><div class="rooms" id="rooms"></div></section><aside class="panel"><div class="panel-head"><div><h2>도착 알림</h2><p>학생이 체크인하면 이곳에 표시됩니다.</p></div></div><div class="notification-list" id="notifications"></div></aside></div>
+        <section class="panel history-panel"><div class="panel-head"><div><h2>최근 3개월 이동 기록</h2><p>학생별 어느 실을 자주 방문했는지 확인합니다.</p></div><span class="kicker">DATA · 3 MONTHS</span></div><div class="history" id="history"></div></section>
       </section>
 
-      <section class="section" aria-labelledby="what-title">
-        <div class="section-heading"><div><div class="section-number">01 / WHAT TO MAKE</div><h2 id="what-title">무엇을 만들까</h2></div><p class="section-note">야자시간 교실 이동을 더 빠르고 정확하게 확인합니다.</p></div>
-        <div class="intro-grid">
-          <article class="info-card wide"><div class="card-label"><span class="dot"></span> USER & CONTEXT</div><h3>선생님들이 야자시간에 학생의 이동을 확인해야 하는 상황</h3><p>학생들이 정해진 이동실로 이동하는 동안, 여러 이동실을 담당하는 선생님들이 직접 교실을 둘러보며 도착 여부를 확인하고 있습니다.</p></article>
-          <article class="info-card"><div class="card-label"><span class="dot"></span> PROBLEM</div><h3>각 이동실을 모두 둘러봐야 해요</h3><p>선생님들이 담당 교실을 일일이 방문해야 하므로 확인에 시간이 걸리고, 학생의 도착 여부를 놓칠 수 있습니다.</p></article>
-          <article class="info-card"><div class="card-label"><span class="dot"></span> SOLUTION</div><h3>도착 즉시 QR 체크인</h3><p>학생이 이동실에 지정된 QR 코드를 찍으면 “김OO이 1번 실습실에 도착했어요”라는 알림이 선생님에게 전달됩니다.</p></article>
-          <article class="info-card wide"><div class="card-label"><span class="dot"></span> PRODUCT</div><h3>QR 기반 교실 이동 확인 웹사이트</h3><p>학생의 간단한 체크인과 선생님의 실시간 확인을 연결하는 교실 이동 확인 프로젝트입니다.</p><div class="team-row"><span class="member">팀 LoG고</span><span class="member">소마고A</span><span class="member">강민우 · 정성원 · 조현</span></div></article>
-        </div>
-      </section>
-
-      <section class="section" aria-labelledby="flow-title">
-        <div class="section-heading"><div><div class="section-number">02 / USER FLOW</div><h2 id="flow-title">사용 흐름</h2></div><p class="section-note">학생의 한 번의 스캔이 선생님의 확인이 됩니다.</p></div>
-        <div class="flow">
-          <article class="flow-card"><span class="arrow">↗</span><h3>이동실 도착</h3><p>학생이 지정된 이동실에 도착합니다.</p></article>
-          <article class="flow-card"><span class="arrow">↗</span><h3>QR 코드 인식</h3><p>이동실에 붙은 QR 코드를 스마트폰으로 찍습니다.</p></article>
-          <article class="flow-card"><h3>선생님 알림</h3><p>학생 이름과 도착한 실 정보가 선생님에게 전달됩니다.</p></article>
-        </div>
-      </section>
-
-      <section class="section" id="scope" aria-labelledby="scope-title">
-        <div class="section-heading"><div><div class="section-number">03 / BUILD SCOPE</div><h2 id="scope-title">어디까지 만들까</h2></div><p class="section-note">핵심 기능은 작게 시작하고, 확인 가능한 결과를 남깁니다.</p></div>
-        <div class="scope-grid">
-          <article class="scope-card include"><h3>개발 범위 · 포함</h3><ul class="scope-list"><li>이동실별 QR 코드를 생성하고 방 정보를 연결합니다.</li><li>학생이 QR 코드를 인식하면 도착 정보를 검증합니다.</li><li>학생의 요청을 바탕으로 선생님에게 도착 알림을 보냅니다.</li></ul></article>
-          <article class="scope-card exclude"><h3>개발 범위 · 제외</h3><ul class="scope-list"><li>이번 프로젝트에서 제외하는 기능은 없습니다.</li><li>QR 체크인부터 이동 기록 확인까지 전체 흐름을 개발합니다.</li></ul></article>
-        </div>
-        <div class="data-band"><div><h3>저장할 데이터</h3><p>학생별 최근 3개월간 방문한 실과 방문 횟수를 기록합니다.</p></div><span class="data-badge">RETENTION · 3 MONTHS</span></div>
-      </section>
-
-      <section class="section check-panel" aria-labelledby="check-title">
-        <div class="check-intro"><div class="section-number">04 / ACCEPTANCE CHECK</div><h2 id="check-title">검증 조건</h2><p>아래 세 가지가 모두 확인되면 핵심 기능이 완성됩니다. 항목을 눌러 체크해 보세요.</p></div>
-        <div class="check-list" role="group" aria-label="검증 조건 목록">
-          <button class="check-item" type="button" role="checkbox" aria-checked="false"><span class="check-icon">✓</span><span>QR 코드가 이동실 정보와 함께 제대로 생성되는가?</span></button>
-          <button class="check-item" type="button" role="checkbox" aria-checked="false"><span class="check-icon">✓</span><span>학생이 QR 코드를 찍었을 때 제대로 인식되는가?</span></button>
-          <button class="check-item" type="button" role="checkbox" aria-checked="false"><span class="check-icon">✓</span><span>“김OO이 1번 실습실에 도착했어요” 알림이 선생님에게 가는가?</span></button>
-        </div>
+      <section class="view" id="studentView" aria-label="학생 체크인">
+        <div class="student-layout"><article class="checkin-intro"><div class="kicker" style="color:#a6d2b1">STUDENT CHECK-IN</div><h2>도착했나요?<br />QR을 찍고 알려주세요.</h2><p>이동실에 붙어 있는 QR 코드의 값을 입력하면 담당 선생님에게 도착 알림이 전송됩니다.</p><div class="steps"><div class="step"><b>01</b><span>이동한 실의 QR 코드 확인</span></div><div class="step"><b>02</b><span>내 이름과 QR 코드값 입력</span></div><div class="step"><b>03</b><span>선생님에게 도착 알림 전송</span></div></div></article><section class="checkin-panel"><h2>학생 도착 알리기</h2><p>QR 카드 아래에 적힌 코드를 입력하거나, 아래 실을 눌러 자동으로 선택하세요.</p><form id="checkinForm"><div class="form-row"><div><label for="studentName">학생 이름</label><input id="studentName" name="studentName" placeholder="예: 김민우" required /></div><div><label for="roomCode">QR 코드값</label><input id="roomCode" name="roomCode" placeholder="예: LOG-101" required /><p class="input-hint">QR 코드 아래의 LOG-코드입니다.</p></div></div><div class="quick-rooms" id="quickRooms"></div><button class="button primary" type="submit" style="width:100%">도착 알림 보내기</button><div class="form-message" id="formMessage" aria-live="polite"></div></form></section></div>
+        <section class="panel history-panel"><div class="panel-head"><div><h2>최근 체크인 기록</h2><p>방금 등록된 이동 기록을 확인할 수 있습니다.</p></div></div><div class="notification-list" id="studentHistory"></div></section>
       </section>
     </main>
-    <footer><span>LoG고 · 소마고A · 교실 이동 확인 프로젝트</span><button class="print-button" type="button" onclick="window.print()">기획서 인쇄하기</button></footer>
+    <div class="modal-backdrop" id="modalBackdrop"><div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><h2 id="modalTitle">새 이동실 QR 만들기</h2><p>이동실 정보를 등록하면 학생용 QR 코드가 바로 생성됩니다.</p><form id="roomForm"><div class="field"><label for="newRoomName">이동실 이름</label><input id="newRoomName" placeholder="예: 3번 실습실" required /></div><div class="field"><label for="newRoomNumber">실 번호</label><input id="newRoomNumber" placeholder="예: 103" required /></div><div class="modal-actions"><button class="button" type="button" id="closeModal">취소</button><button class="button primary" type="submit">QR 생성하기</button></div></form></div></div>
+    <div class="toast" id="toast" role="status"></div>
   </div>
   <script>
-    document.querySelectorAll('.check-item').forEach((item) => {
-      item.addEventListener('click', () => {
-        const checked = item.getAttribute('aria-checked') === 'true';
-        item.setAttribute('aria-checked', String(!checked));
-      });
-    });
+    const initialRooms = [{ id:'room-101', name:'1번 실습실', number:'101', code:'LOG-101' }, { id:'room-102', name:'2번 실습실', number:'102', code:'LOG-102' }, { id:'room-103', name:'3번 실습실', number:'103', code:'LOG-103' }, { id:'room-201', name:'창의 융합실', number:'201', code:'LOG-201' }];
+    const initialHistory = [{ name:'김민우', room:'1번 실습실', code:'LOG-101', at: new Date(Date.now() - 1000 * 60 * 14).toISOString() }, { name:'정성원', room:'창의 융합실', code:'LOG-201', at: new Date(Date.now() - 1000 * 60 * 38).toISOString() }, { name:'조현', room:'2번 실습실', code:'LOG-102', at: new Date(Date.now() - 1000 * 60 * 67).toISOString() }];
+    const state = { rooms: JSON.parse(localStorage.getItem('loggo-rooms') || 'null') || initialRooms, history: JSON.parse(localStorage.getItem('loggo-history') || 'null') || initialHistory };
+    const $ = (selector) => document.querySelector(selector);
+    const save = () => { localStorage.setItem('loggo-rooms', JSON.stringify(state.rooms)); localStorage.setItem('loggo-history', JSON.stringify(state.history)); };
+    const escapeHtml = (value) => String(value).replace(/[&<>'"]/g, (char) => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[char]));
+    const timeAgo = (iso) => { const minutes = Math.max(1, Math.floor((Date.now() - new Date(iso).getTime()) / 60000)); return minutes < 60 ? `${minutes}분 전` : `${Math.floor(minutes / 60)}시간 전`; };
+    const hash = (text) => { let value = 17; for (let i = 0; i < text.length; i += 1) value = (value * 31 + text.charCodeAt(i)) >>> 0; return value; };
+    function makeQr(room) { const seed = hash(room.code); let html = ''; for (let y=0; y<21; y += 1) for (let x=0; x<21; x += 1) { const finder = (x<7 && y<7) || (x>13 && y<7) || (x<7 && y>13); const inner = (x===1||x===5||y===1||y===5||((x>1&&x<5)&&(y>1&&y<5))); const filled = finder ? inner : ((seed + x*13 + y*29 + x*y*7) % 5 < 2); html += `<span class="${filled ? '' : 'off'}"></span>`; } return html; }
+    function renderRooms() { $('#rooms').innerHTML = state.rooms.map((room, index) => `<article class="room-card"><div class="room-top"><div><div class="room-index">ROOM 0${index + 1}</div><h3>${escapeHtml(room.name)}</h3><small>실 번호 ${escapeHtml(room.number)}</small></div><span class="status-dot" title="사용 중"></span></div><div class="qr" aria-label="${escapeHtml(room.name)} QR 코드">${makeQr(room)}</div><div class="room-footer"><span class="room-code">${escapeHtml(room.code)}</span><button type="button" data-copy="${escapeHtml(room.code)}">코드 복사</button></div></article>`).join(''); $('#roomCount').textContent = state.rooms.length; }
+    function renderNotifications() { const list = state.history.slice(0, 5); $('#notifications').innerHTML = list.length ? list.map((item) => `<div class="notification"><div class="notice-icon">✓</div><div><strong>${escapeHtml(item.name)}이(가) ${escapeHtml(item.room)}에 도착했어요</strong><span>${timeAgo(item.at)} · ${escapeHtml(item.code)} 인증 완료</span></div></div>`).join('') : '<div class="empty">아직 도착 알림이 없습니다.</div>'; $('#studentHistory').innerHTML = list.length ? list.map((item) => `<div class="notification"><div class="notice-icon">${escapeHtml(item.room.slice(0,1))}</div><div><strong>${escapeHtml(item.room)} 체크인 완료</strong><span>${escapeHtml(item.name)} · ${timeAgo(item.at)}</span></div></div>`).join('') : '<div class="empty">최근 체크인 기록이 없습니다.</div>'; $('#todayCount').textContent = state.history.filter((item) => new Date(item.at).toDateString() === new Date().toDateString()).length; $('#unreadCount').textContent = Math.min(state.history.length, 5); }
+    function renderHistory() { const counts = state.rooms.map((room) => ({ ...room, count: state.history.filter((item) => item.code === room.code).length })); const max = Math.max(...counts.map((room) => room.count), 1); const top = counts.slice().sort((a,b) => b.count-a.count)[0]; $('#topRoom').textContent = top && top.count ? top.name.replace('실습실','실') : '-'; $('#history').innerHTML = counts.map((room) => `<div class="history-row"><span>${escapeHtml(room.name)}</span><div class="bar-wrap"><div class="bar" style="width:${Math.max(room.count ? 12 : 3, room.count / max * 100)}%"></div></div><span class="history-count">${room.count}회</span></div>`).join(''); }
+    function renderQuickRooms() { $('#quickRooms').innerHTML = state.rooms.map((room) => `<button type="button" data-quick-code="${escapeHtml(room.code)}">${escapeHtml(room.name)} · ${escapeHtml(room.code)}</button>`).join(''); }
+    function render() { renderRooms(); renderNotifications(); renderHistory(); renderQuickRooms(); }
+    function showToast(message) { const toast = $('#toast'); toast.textContent = message; toast.classList.add('show'); window.clearTimeout(showToast.timer); showToast.timer = window.setTimeout(() => toast.classList.remove('show'), 2600); }
+    function openModal() { $('#modalBackdrop').classList.add('open'); $('#newRoomName').focus(); }
+    function closeModal() { $('#modalBackdrop').classList.remove('open'); $('#roomForm').reset(); }
+    document.querySelectorAll('.tab').forEach((tab) => tab.addEventListener('click', () => { document.querySelectorAll('.tab').forEach((item) => item.classList.remove('active')); document.querySelectorAll('.view').forEach((view) => view.classList.remove('active')); tab.classList.add('active'); $(`#${tab.dataset.view}`).classList.add('active'); }));
+    $('#studentShortcut').addEventListener('click', () => document.querySelector('[data-view="studentView"]').click());
+    $('#openRoomModal').addEventListener('click', openModal); $('#openRoomModal2').addEventListener('click', openModal); $('#closeModal').addEventListener('click', closeModal); $('#modalBackdrop').addEventListener('click', (event) => { if (event.target === $('#modalBackdrop')) closeModal(); });
+    $('#roomForm').addEventListener('submit', (event) => { event.preventDefault(); const name = $('#newRoomName').value.trim(); const number = $('#newRoomNumber').value.trim(); if (!name || !number) return; const code = `LOG-${number}`; if (state.rooms.some((room) => room.code === code)) { showToast('이미 등록된 실 번호입니다.'); return; } state.rooms.push({ id:`room-${number}`, name, number, code }); save(); render(); closeModal(); showToast(`${name} QR 코드가 생성되었습니다.`); });
+    $('#checkinForm').addEventListener('submit', (event) => { event.preventDefault(); const name = $('#studentName').value.trim(); const code = $('#roomCode').value.trim().toUpperCase(); const room = state.rooms.find((item) => item.code === code); const message = $('#formMessage'); if (!room) { message.textContent = '등록된 QR 코드가 아니에요. QR 카드의 코드를 다시 확인해 주세요.'; message.className = 'form-message error'; return; } state.history.unshift({ name, room:room.name, code:room.code, at:new Date().toISOString() }); state.history = state.history.slice(0, 60); save(); render(); message.textContent = `${name}님의 도착 알림을 선생님에게 보냈어요.`; message.className = 'form-message success'; $('#checkinForm').reset(); showToast(`${room.name} 도착 알림 전송 완료`); });
+    document.addEventListener('click', (event) => { const copyButton = event.target.closest('[data-copy]'); if (copyButton) { navigator.clipboard?.writeText(copyButton.dataset.copy); showToast(`${copyButton.dataset.copy} 코드를 복사했습니다.`); } const quick = event.target.closest('[data-quick-code]'); if (quick) { $('#roomCode').value = quick.dataset.quickCode; $('#roomCode').focus(); } });
+    render();
   </script>
 </body>
 </html>
