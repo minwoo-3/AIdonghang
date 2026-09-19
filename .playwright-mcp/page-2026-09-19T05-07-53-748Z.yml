@@ -1,0 +1,53 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e5]:
+      - text: LoG고
+      - generic [ref=e6]: CLASSROOM CHECK
+    - generic [ref=e7]:
+      - generic [ref=e8]: 교사 계정 연결됨
+      - generic [ref=e10]: 선생님
+  - main [ref=e11]:
+    - generic [ref=e12]:
+      - generic [ref=e13]:
+        - generic [ref=e14]: STUDENT CHECK-IN
+        - heading "도착했나요? QR로 알려주세요." [level=1] [ref=e15]:
+          - text: 도착했나요?
+          - text: QR로 알려주세요.
+        - paragraph [ref=e16]: 먼저 이동 신청을 남기고, 이동실에 도착하면 QR을 찍어 주세요. 선생님 계정에 두 기록이 모두 전달됩니다.
+      - generic [ref=e17]:
+        - generic [ref=e18]:
+          - heading "1. 이동 신청" [level=2] [ref=e19]
+          - paragraph [ref=e20]: 가고 싶은 실을 먼저 선택하면 선생님에게 신청 알림이 갑니다.
+          - generic [ref=e21]:
+            - generic [ref=e22]:
+              - generic [ref=e23]: 학생 이름
+              - textbox "학생 이름" [ref=e24]:
+                - /placeholder: "예: 김민우"
+            - generic [ref=e25]:
+              - generic [ref=e26]: 이동할 실
+              - combobox "이동할 실" [ref=e27]:
+                - option "1번 실습실 · LOG-101" [selected]
+                - option "2번 실습실 · LOG-102"
+                - option "3번 실습실 · LOG-103"
+                - option "창의 융합실 · LOG-201"
+            - button "이동 신청 보내기" [ref=e29] [cursor=pointer]
+        - generic [ref=e31]:
+          - heading "2. QR 도착 확인" [level=2] [ref=e32]
+          - paragraph [ref=e33]: 카메라로 QR을 찍거나 QR 카드의 코드를 직접 입력하세요.
+          - generic [ref=e34]:
+            - generic [ref=e35]:
+              - generic [ref=e36]: 학생 이름
+              - textbox "학생 이름" [ref=e37]:
+                - /placeholder: "예: 김민우"
+            - generic [ref=e38]:
+              - generic [ref=e39]: QR 코드값
+              - textbox "QR 코드값" [ref=e40]:
+                - /placeholder: "예: LOG-101"
+                - text: LOG-101
+            - generic [ref=e42]: 카메라를 켜면 QR 코드를 인식합니다.
+            - generic [ref=e43]:
+              - button "카메라로 찍기" [ref=e44] [cursor=pointer]
+              - button "도착 알림 보내기" [ref=e45] [cursor=pointer]
+      - paragraph [ref=e47]:
+        - button "교사 로그인 화면으로 돌아가기" [ref=e48] [cursor=pointer]
+  - status [ref=e49]

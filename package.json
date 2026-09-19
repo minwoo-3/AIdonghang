@@ -1,0 +1,16 @@
+{
+  "name": "loggo-classroom-check",
+  "version": "1.0.0",
+  "private": true,
+  "description": "LoG고 교실 이동 확인 서비스",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "better-sqlite3": "^11.8.1",
+    "express": "^4.21.2",
+    "qrcode": "^1.5.4"
+  }
+}
