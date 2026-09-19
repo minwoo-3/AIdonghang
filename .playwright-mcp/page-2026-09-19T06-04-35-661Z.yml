@@ -1,0 +1,44 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - img "LoG고 로고" [ref=e4]
+      - generic [ref=e5]:
+        - text: LoG고
+        - generic [ref=e6]: CLASSROOM CHECK
+    - button "교사 로그인" [ref=e8] [cursor=pointer]
+  - main [ref=e9]:
+    - generic [ref=e10]:
+      - generic [ref=e11]:
+        - generic [ref=e12]: STUDENT REQUEST
+        - heading "먼저 이동 신청을 등록해 주세요." [level=1] [ref=e13]:
+          - text: 먼저 이동 신청을
+          - text: 등록해 주세요.
+        - paragraph [ref=e14]: 10교시 또는 11교시를 선택하고 이름과 학번으로 이동할 실을 신청합니다. 선생님이 승인하면 QR 도착 인증 화면이 열립니다.
+      - generic [ref=e16]:
+        - heading "이동 신청" [level=2] [ref=e17]
+        - paragraph [ref=e18]: 신청 후 선생님 승인까지 잠시 기다려 주세요.
+        - generic [ref=e19]:
+          - generic [ref=e20]:
+            - generic [ref=e21]: 이동 교시
+            - combobox "이동 교시" [ref=e22]:
+              - option "10교시" [selected]
+              - option "11교시"
+          - generic [ref=e23]:
+            - generic [ref=e24]: 학생 이름
+            - textbox "학생 이름" [ref=e25]:
+              - /placeholder: "예: 김민우"
+          - generic [ref=e26]:
+            - generic [ref=e27]: 학번
+            - textbox "학번" [ref=e28]:
+              - /placeholder: "예: 2315"
+          - generic [ref=e29]:
+            - generic [ref=e30]: 이동할 실
+            - combobox "이동할 실" [ref=e31]:
+              - option "1번 실습실 · LOG-101" [selected]
+              - option "2번 실습실 · LOG-102"
+              - option "3번 실습실 · LOG-103"
+              - option "창의 융합실 · LOG-201"
+          - button "이동 신청 보내기" [ref=e33] [cursor=pointer]
+      - paragraph [ref=e35]:
+        - button "교사 로그인 화면으로 돌아가기" [ref=e36] [cursor=pointer]
+  - status [ref=e37]

@@ -212,6 +212,16 @@ app.post('/api/visits/:id/confirm', requireTeacher, (req, res) => {
   res.json({ ok: true });
 });
 
+app.delete('/api/admin/records', requireTeacher, (req, res) => {
+  const clearRecords = db.transaction(() => {
+    db.prepare('DELETE FROM notifications').run();
+    db.prepare('DELETE FROM visits').run();
+    db.prepare('DELETE FROM move_requests').run();
+  });
+  clearRecords();
+  res.json({ ok: true });
+});
+
 app.post('/api/notifications/read', requireTeacher, (req, res) => { db.prepare('UPDATE notifications SET is_read = 1 WHERE id = ?').run(req.body?.id); res.json({ ok: true }); });
 
 app.get('*', (req, res) => res.sendFile(path.join(ROOT, 'index.html')));
