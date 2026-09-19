@@ -1,0 +1,15 @@
+[     170ms] [INFO] [preview-bridge] v1.0.0 @ https://hofn4rz6912gqaek.jitda.io/__preview-bridge.js:1
+[     172ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) @ https://hofn4rz6912gqaek.jitda.io/:0
+[   25386ms] [ERROR] Failed to load resource: the server responded with a status of 401 () @ https://hofn4rz6912gqaek.jitda.io/api/dashboard:0
+[   30380ms] [ERROR] Failed to load resource: the server responded with a status of 401 () @ https://hofn4rz6912gqaek.jitda.io/api/dashboard:0
+[   35380ms] [ERROR] Failed to load resource: the server responded with a status of 401 () @ https://hofn4rz6912gqaek.jitda.io/api/dashboard:0
+[   40381ms] [ERROR] Failed to load resource: the server responded with a status of 401 () @ https://hofn4rz6912gqaek.jitda.io/api/dashboard:0
+[   45381ms] [ERROR] Failed to load resource: the server responded with a status of 401 () @ https://hofn4rz6912gqaek.jitda.io/api/dashboard:0
+[   50388ms] [ERROR] Failed to load resource: the server responded with a status of 401 () @ https://hofn4rz6912gqaek.jitda.io/api/dashboard:0
+[   55380ms] [ERROR] Failed to load resource: the server responded with a status of 401 () @ https://hofn4rz6912gqaek.jitda.io/api/dashboard:0
+[   60380ms] [ERROR] Failed to load resource: the server responded with a status of 401 () @ https://hofn4rz6912gqaek.jitda.io/api/dashboard:0
+[   65381ms] [ERROR] Failed to load resource: the server responded with a status of 401 () @ https://hofn4rz6912gqaek.jitda.io/api/dashboard:0
+[   70380ms] [ERROR] Failed to load resource: the server responded with a status of 401 () @ https://hofn4rz6912gqaek.jitda.io/api/dashboard:0
+[   75387ms] [ERROR] Failed to load resource: the server responded with a status of 401 () @ https://hofn4rz6912gqaek.jitda.io/api/dashboard:0
+[   80381ms] [ERROR] Failed to load resource: the server responded with a status of 401 () @ https://hofn4rz6912gqaek.jitda.io/api/dashboard:0
+[   85381ms] [ERROR] Failed to load resource: the server responded with a status of 401 () @ https://hofn4rz6912gqaek.jitda.io/api/dashboard:0

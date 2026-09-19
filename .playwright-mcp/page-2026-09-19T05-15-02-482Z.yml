@@ -1,0 +1,62 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - img "LoG고 아이콘" [ref=e4]
+      - img "LoG고 로고" [ref=e5]
+      - generic [ref=e7]: CLASSROOM CHECK
+    - generic [ref=e8]:
+      - generic [ref=e9]: 교사 계정 연결됨
+      - generic [ref=e11]: 선생님
+  - main [ref=e12]:
+    - generic [ref=e13]:
+      - generic [ref=e14]:
+        - generic [ref=e15]: STUDENT CHECK-IN
+        - heading "도착했나요? QR로 알려주세요." [level=1] [ref=e16]:
+          - text: 도착했나요?
+          - text: QR로 알려주세요.
+        - paragraph [ref=e17]: 이동할 실에 신청하고, 도착한 실의 QR을 스마트폰 카메라로 찍어 주세요. QR을 찍으면 이 인증 화면으로 바로 이동합니다.
+      - generic [ref=e18]:
+        - generic [ref=e19]:
+          - heading "1. 이동 신청" [level=2] [ref=e20]
+          - paragraph [ref=e21]: 이름과 학번으로 가고 싶은 실을 신청하면 선생님에게 알림이 갑니다.
+          - generic [ref=e22]:
+            - generic [ref=e23]:
+              - generic [ref=e24]: 학생 이름
+              - textbox "학생 이름" [ref=e25]:
+                - /placeholder: "예: 김민우"
+            - generic [ref=e26]:
+              - generic [ref=e27]: 학번
+              - textbox "학번" [ref=e28]:
+                - /placeholder: "예: 2315"
+            - generic [ref=e29]:
+              - generic [ref=e30]: 이동할 실
+              - combobox "이동할 실" [ref=e31]:
+                - option "1번 실습실 · LOG-101" [selected]
+                - option "2번 실습실 · LOG-102"
+                - option "3번 실습실 · LOG-103"
+                - option "창의 융합실 · LOG-201"
+            - button "이동 신청 보내기" [ref=e33] [cursor=pointer]
+        - generic [ref=e35]:
+          - heading "2. QR 도착 인증" [level=2] [ref=e36]
+          - paragraph [ref=e37]: 1번 실습실 QR 인증 화면입니다. 이름과 학번을 적고 도착 인증을 보내 주세요.
+          - generic [ref=e38]:
+            - generic [ref=e39]:
+              - generic [ref=e40]: 학생 이름
+              - textbox "학생 이름" [ref=e41]:
+                - /placeholder: "예: 김민우"
+            - generic [ref=e42]:
+              - generic [ref=e43]: 학번
+              - textbox "학번" [ref=e44]:
+                - /placeholder: "예: 2315"
+            - generic [ref=e45]:
+              - generic [ref=e46]: 도착한 실 QR 코드
+              - textbox "도착한 실 QR 코드" [ref=e47]:
+                - /placeholder: "예: LOG-101"
+                - text: LOG-101
+            - generic [ref=e49]: 카메라를 켜면 QR을 인식하고 인증 화면으로 이동합니다.
+            - generic [ref=e50]:
+              - button "카메라로 찍기" [ref=e51] [cursor=pointer]
+              - button "도착 인증 보내기" [ref=e52] [cursor=pointer]
+      - paragraph [ref=e54]:
+        - button "교사 로그인 화면으로 돌아가기" [ref=e55] [cursor=pointer]
+  - status [ref=e56]

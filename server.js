@@ -58,6 +58,14 @@ db.exec(`
   );
 `);
 
+const ensureColumn = (table, column) => {
+  const columns = db.prepare(`PRAGMA table_info(${table})`).all();
+  if (!columns.some((item) => item.name === column)) db.exec(`ALTER TABLE ${table} ADD COLUMN ${column} TEXT`);
+};
+ensureColumn('move_requests', 'student_id');
+ensureColumn('visits', 'student_id');
+ensureColumn('notifications', 'student_id');
+
 const seedTeacher = db.prepare('SELECT id FROM teachers WHERE email = ?').get('teacher@loggo.local');
 if (!seedTeacher) {
   db.prepare('INSERT INTO teachers (name, email, password_hash) VALUES (?, ?, ?)').run('야자 감독 선생님', 'teacher@loggo.local', bcrypt.hashSync('loggo2026', 10));
@@ -104,8 +112,10 @@ app.get('/api/rooms', (req, res) => res.json({ rooms: db.prepare('SELECT id, nam
 app.get('/api/rooms/:id/qr', async (req, res) => {
   const room = db.prepare('SELECT id, name, number, code FROM rooms WHERE id = ?').get(req.params.id);
   if (!room) return res.status(404).json({ error: '이동실을 찾을 수 없습니다.' });
-  const scanUrl = `${req.protocol}://${req.get('host')}/?student=1&code=${encodeURIComponent(room.code)}`;
-  const dataUrl = await QRCode.toDataURL(scanUrl, { width: 900, margin: 2, color: { dark: '#19372a', light: '#ffffff' } });
+  const publicHost = req.get('x-forwarded-host') || req.get('host');
+  const publicProtocol = (req.get('x-forwarded-proto') || req.protocol).split(',')[0].trim();
+  const scanUrl = `${publicProtocol}://${publicHost}/?student=1&code=${encodeURIComponent(room.code)}`;
+  const dataUrl = await QRCode.toDataURL(scanUrl, { width: 900, margin: 2, color: { dark: '#702542', light: '#ffffff' } });
   res.json({ room, scanUrl, dataUrl });
 });
 
@@ -120,32 +130,35 @@ app.post('/api/rooms', requireTeacher, (req, res) => {
 });
 
 app.post('/api/requests', (req, res) => {
-  const { studentName, roomCode } = req.body || {};
+  const { studentName, studentId, roomCode } = req.body || {};
   const room = roomByCode(roomCode);
-  if (!studentName || !room) return res.status(400).json({ error: '학생 이름과 이동실을 확인해 주세요.' });
-  const result = db.prepare('INSERT INTO move_requests (student_name, room_id) VALUES (?, ?)').run(String(studentName).trim(), room.id);
-  db.prepare('INSERT INTO notifications (kind, student_name, room_id, message) VALUES (?, ?, ?, ?)').run('request', String(studentName).trim(), room.id, `${String(studentName).trim()} 학생이 ${room.name}으로 이동 신청을 했어요.`);
+  if (!studentName || !studentId || !room) return res.status(400).json({ error: '학생 이름, 학번, 이동실을 모두 확인해 주세요.' });
+  const cleanName = String(studentName).trim();
+  const cleanId = String(studentId).trim();
+  const result = db.prepare('INSERT INTO move_requests (student_name, student_id, room_id) VALUES (?, ?, ?)').run(cleanName, cleanId, room.id);
+  db.prepare('INSERT INTO notifications (kind, student_name, student_id, room_id, message) VALUES (?, ?, ?, ?, ?)').run('request', cleanName, cleanId, room.id, `${cleanName}(${cleanId}) 학생이 ${room.name}으로 이동 신청을 했어요.`);
   res.json({ requestId: result.lastInsertRowid, room: { name: room.name, code: room.code } });
 });
 
 app.post('/api/checkins', (req, res) => {
-  const { studentName, roomCode } = req.body || {};
+  const { studentName, studentId, roomCode } = req.body || {};
   const room = roomByCode(roomCode);
-  if (!studentName || !room) return res.status(400).json({ error: '등록된 QR 코드가 아니에요. QR 카드의 코드를 다시 확인해 주세요.' });
+  if (!studentName || !studentId || !room) return res.status(400).json({ error: '이름, 학번, QR 코드를 모두 확인해 주세요.' });
   const cleanName = String(studentName).trim();
-  const request = db.prepare(`SELECT * FROM move_requests WHERE student_name = ? AND room_id = ? AND status = 'requested' ORDER BY id DESC LIMIT 1`).get(cleanName, room.id);
+  const cleanId = String(studentId).trim();
+  const request = db.prepare(`SELECT * FROM move_requests WHERE student_name = ? AND student_id = ? AND room_id = ? AND status = 'requested' ORDER BY id DESC LIMIT 1`).get(cleanName, cleanId, room.id);
   const now = isoNow();
-  const visit = db.prepare('INSERT INTO visits (student_name, room_id, request_id, created_at) VALUES (?, ?, ?, ?)').run(cleanName, room.id, request?.id || null, now);
+  const visit = db.prepare('INSERT INTO visits (student_name, student_id, room_id, request_id, created_at) VALUES (?, ?, ?, ?, ?)').run(cleanName, cleanId, room.id, request?.id || null, now);
   if (request) db.prepare('UPDATE move_requests SET status = \'arrived\' WHERE id = ?').run(request.id);
-  db.prepare('INSERT INTO notifications (kind, student_name, room_id, message, created_at) VALUES (?, ?, ?, ?, ?)').run('arrival', cleanName, room.id, `${cleanName} 학생이 ${room.name}에 도착했어요.`, now);
+  db.prepare('INSERT INTO notifications (kind, student_name, student_id, room_id, message, created_at) VALUES (?, ?, ?, ?, ?, ?)').run('arrival', cleanName, cleanId, room.id, `${cleanName}(${cleanId}) 학생이 ${room.name}에 도착했어요.`, now);
   res.json({ visitId: visit.lastInsertRowid, message: `${cleanName} 학생의 ${room.name} 도착 알림을 선생님에게 보냈어요.`, room: { name: room.name, code: room.code } });
 });
 
 app.get('/api/dashboard', requireTeacher, (req, res) => {
   const rooms = db.prepare('SELECT id, name, number, code FROM rooms ORDER BY id').all();
-  const notifications = db.prepare(`SELECT n.id, n.kind, n.student_name AS studentName, n.message, n.is_read AS isRead, n.created_at AS createdAt, r.name AS roomName, r.code FROM notifications n JOIN rooms r ON r.id = n.room_id ORDER BY n.id DESC LIMIT 30`).all();
-  const visits = db.prepare(`SELECT v.id, v.student_name AS studentName, v.created_at AS createdAt, r.name AS roomName, r.code FROM visits v JOIN rooms r ON r.id = v.room_id WHERE datetime(v.created_at) >= datetime('now', '-3 months') ORDER BY v.id DESC LIMIT 100`).all();
-  const requests = db.prepare(`SELECT m.id, m.student_name AS studentName, m.status, m.created_at AS createdAt, r.name AS roomName, r.code FROM move_requests m JOIN rooms r ON r.id = m.room_id ORDER BY m.id DESC LIMIT 30`).all();
+  const notifications = db.prepare(`SELECT n.id, n.kind, n.student_name AS studentName, n.student_id AS studentId, n.message, n.is_read AS isRead, n.created_at AS createdAt, r.name AS roomName, r.code FROM notifications n JOIN rooms r ON r.id = n.room_id ORDER BY n.id DESC LIMIT 30`).all();
+  const visits = db.prepare(`SELECT v.id, v.student_name AS studentName, v.student_id AS studentId, v.created_at AS createdAt, r.name AS roomName, r.code FROM visits v JOIN rooms r ON r.id = v.room_id WHERE datetime(v.created_at) >= datetime('now', '-3 months') ORDER BY v.id DESC LIMIT 100`).all();
+  const requests = db.prepare(`SELECT m.id, m.student_name AS studentName, m.student_id AS studentId, m.status, m.created_at AS createdAt, r.name AS roomName, r.code FROM move_requests m JOIN rooms r ON r.id = m.room_id ORDER BY m.id DESC LIMIT 30`).all();
   const stats = db.prepare(`SELECT r.name, COUNT(v.id) AS count FROM rooms r LEFT JOIN visits v ON v.room_id = r.id AND datetime(v.created_at) >= datetime('now', '-3 months') GROUP BY r.id ORDER BY count DESC`).all();
   res.json({ rooms, notifications, visits, requests, stats });
 });

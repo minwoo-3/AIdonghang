@@ -1,0 +1,61 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - img "LoG고 아이콘" [ref=e4]
+      - img "LoG고 로고" [ref=e5]
+      - generic [ref=e7]: CLASSROOM CHECK
+    - generic [ref=e8]:
+      - generic [ref=e9]: 교사 계정 연결됨
+      - generic [ref=e11]: 선생님
+      - button "로그아웃" [ref=e12] [cursor=pointer]
+  - main [ref=e13]:
+    - generic [ref=e14]:
+      - generic [ref=e15]:
+        - generic [ref=e16]:
+          - generic [ref=e17]: 소마고A · 야간 자율학습
+          - heading "교실 이동 확인" [level=1] [ref=e18]
+          - paragraph [ref=e19]: 학생이 QR을 찍으면, 도착 소식이 바로 도착합니다.
+        - generic [ref=e20]:
+          - button "학생 화면" [ref=e21] [cursor=pointer]
+          - button "+ 이동실 QR 만들기" [ref=e22] [cursor=pointer]
+      - generic [ref=e23]:
+        - article [ref=e24]:
+          - generic [ref=e25]: 오늘 도착한 학생
+          - generic [ref=e26]: "0"
+          - generic [ref=e27]: 실시간 도착 기록
+        - article [ref=e28]:
+          - generic [ref=e29]: 운영 중인 이동실
+          - generic [ref=e30]: "0"
+          - generic [ref=e31]: QR 코드 발급 완료
+        - article [ref=e32]:
+          - generic [ref=e33]: 확인하지 않은 알림
+          - generic [ref=e34]: "0"
+          - generic [ref=e35]: 신청 및 도착 알림
+        - article [ref=e36]:
+          - generic [ref=e37]: 가장 많이 간 실
+          - generic [ref=e38]: "-"
+          - generic [ref=e39]: 최근 3개월 기준
+      - generic [ref=e40]:
+        - generic [ref=e42]:
+          - generic [ref=e43]:
+            - heading "이동실 QR 코드" [level=2] [ref=e44]
+            - paragraph [ref=e45]: QR을 크게 열어 출력하거나 이동실에 붙여주세요.
+          - button "새 QR 생성" [ref=e46] [cursor=pointer]
+        - complementary [ref=e48]:
+          - generic [ref=e50]:
+            - heading "실시간 알림" [level=2] [ref=e51]
+            - paragraph [ref=e52]: 신청과 도착을 최신순으로 표시합니다.
+      - generic [ref=e54]:
+        - generic [ref=e55]:
+          - generic [ref=e56]:
+            - heading "이동 신청 · 도착 기록" [level=2] [ref=e57]
+            - paragraph [ref=e58]: 학생이 어디로 신청했고 실제 어디에 도착했는지 확인합니다.
+          - generic [ref=e59]: DATABASE · 3 MONTHS
+        - generic [ref=e60]:
+          - generic [ref=e62]:
+            - text: 최근 이동 신청
+            - generic [ref=e63]: REQUESTS
+          - generic [ref=e65]:
+            - text: 최근 도착 기록
+            - generic [ref=e66]: ARRIVALS
+  - status [ref=e67]

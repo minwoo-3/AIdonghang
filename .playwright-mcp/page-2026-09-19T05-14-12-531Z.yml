@@ -1,0 +1,30 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - img "LoG고 아이콘" [ref=e4]
+      - img "LoG고 로고" [ref=e5]
+      - generic [ref=e7]: CLASSROOM CHECK
+    - generic [ref=e8]:
+      - generic [ref=e9]: 교사 계정 연결됨
+      - generic [ref=e11]: 선생님
+  - main [ref=e12]:
+    - generic [ref=e14]:
+      - img "LoG고" [ref=e15]
+      - generic [ref=e16]: TEACHER ACCESS · 소마고A
+      - heading "교사 계정으로 이동을 확인하세요." [level=1] [ref=e17]:
+        - text: 교사 계정으로
+        - text: 이동을 확인하세요.
+      - paragraph [ref=e18]: 학생들의 이동 신청과 QR 도착 알림을 한곳에서 확인할 수 있습니다.
+      - generic [ref=e19]:
+        - generic [ref=e20]:
+          - generic [ref=e21]: 이메일
+          - textbox "이메일" [ref=e22]: teacher@loggo.local
+        - generic [ref=e23]:
+          - generic [ref=e24]: 비밀번호
+          - textbox "비밀번호" [ref=e25]: loggo2026
+        - button "교사 계정 로그인" [ref=e26] [cursor=pointer]
+      - generic [ref=e28]:
+        - text: 체험 계정이 준비되어 있습니다.
+        - text: teacher@loggo.local · loggo2026
+      - button "학생 체크인 화면 열기" [ref=e29] [cursor=pointer]
+  - status [ref=e30]
