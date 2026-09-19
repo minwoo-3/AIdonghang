@@ -1,0 +1,110 @@
+- generic [ref=e2]:
+  - banner [ref=e3]:
+    - generic [ref=e4]: LoG고 / PROJECT BRIEF
+    - link "기획 범위 보기 ↗" [ref=e6] [cursor=pointer]:
+      - /url: "#scope"
+  - main [ref=e7]:
+    - region "교실 이동 확인 프로젝트" [ref=e8]:
+      - generic [ref=e9]:
+        - generic [ref=e10]: SOMAGO A · 2026 PROJECT
+        - heading "교실 이동 확인 프로젝트" [level=1] [ref=e11]:
+          - text: 교실 이동
+          - text: 확인 프로젝트
+        - paragraph [ref=e12]: 이동실의 QR 코드를 찍으면 학생의 도착을 선생님께 바로 알려주는 야간 자율학습 관리 서비스입니다.
+        - generic [ref=e13]:
+          - generic [ref=e14]: QR 기반 확인
+          - generic [ref=e15]: 선생님 알림
+          - generic [ref=e16]: 이동 기록
+      - generic "1번 실습실 QR 코드 예시" [ref=e17]:
+        - generic [ref=e18]:
+          - generic [ref=e19]:
+            - generic [ref=e20]: ROOM CHECK
+            - generic [ref=e21]: NO. 01
+          - paragraph [ref=e195]: 1번 실습실
+          - paragraph [ref=e196]: 학생 도착 확인용
+    - region "무엇을 만들까" [ref=e197]:
+      - generic [ref=e198]:
+        - generic [ref=e199]:
+          - generic [ref=e200]: 01 / WHAT TO MAKE
+          - heading "무엇을 만들까" [level=2] [ref=e201]
+        - paragraph [ref=e202]: 야자시간 교실 이동을 더 빠르고 정확하게 확인합니다.
+      - generic [ref=e203]:
+        - article [ref=e204]:
+          - generic [ref=e205]: USER & CONTEXT
+          - heading "선생님들이 야자시간에 학생의 이동을 확인해야 하는 상황" [level=3] [ref=e207]
+          - paragraph [ref=e208]: 학생들이 정해진 이동실로 이동하는 동안, 여러 이동실을 담당하는 선생님들이 직접 교실을 둘러보며 도착 여부를 확인하고 있습니다.
+        - article [ref=e209]:
+          - generic [ref=e210]: PROBLEM
+          - heading "각 이동실을 모두 둘러봐야 해요" [level=3] [ref=e212]
+          - paragraph [ref=e213]: 선생님들이 담당 교실을 일일이 방문해야 하므로 확인에 시간이 걸리고, 학생의 도착 여부를 놓칠 수 있습니다.
+        - article [ref=e214]:
+          - generic [ref=e215]: SOLUTION
+          - heading "도착 즉시 QR 체크인" [level=3] [ref=e217]
+          - paragraph [ref=e218]: 학생이 이동실에 지정된 QR 코드를 찍으면 “김OO이 1번 실습실에 도착했어요”라는 알림이 선생님에게 전달됩니다.
+        - article [ref=e219]:
+          - generic [ref=e220]: PRODUCT
+          - heading "QR 기반 교실 이동 확인 웹사이트" [level=3] [ref=e222]
+          - paragraph [ref=e223]: 학생의 간단한 체크인과 선생님의 실시간 확인을 연결하는 교실 이동 확인 프로젝트입니다.
+          - generic [ref=e224]:
+            - generic [ref=e225]: 팀 LoG고
+            - generic [ref=e226]: 소마고A
+            - generic [ref=e227]: 강민우 · 정성원 · 조현
+    - region "사용 흐름" [ref=e228]:
+      - generic [ref=e229]:
+        - generic [ref=e230]:
+          - generic [ref=e231]: 02 / USER FLOW
+          - heading "사용 흐름" [level=2] [ref=e232]
+        - paragraph [ref=e233]: 학생의 한 번의 스캔이 선생님의 확인이 됩니다.
+      - generic [ref=e234]:
+        - article [ref=e235]:
+          - generic [ref=e236]: ↗
+          - heading "이동실 도착" [level=3] [ref=e237]
+          - paragraph [ref=e238]: 학생이 지정된 이동실에 도착합니다.
+        - article [ref=e239]:
+          - generic [ref=e240]: ↗
+          - heading "QR 코드 인식" [level=3] [ref=e241]
+          - paragraph [ref=e242]: 이동실에 붙은 QR 코드를 스마트폰으로 찍습니다.
+        - article [ref=e243]:
+          - heading "선생님 알림" [level=3] [ref=e244]
+          - paragraph [ref=e245]: 학생 이름과 도착한 실 정보가 선생님에게 전달됩니다.
+    - region "어디까지 만들까" [ref=e246]:
+      - generic [ref=e247]:
+        - generic [ref=e248]:
+          - generic [ref=e249]: 03 / BUILD SCOPE
+          - heading "어디까지 만들까" [level=2] [ref=e250]
+        - paragraph [ref=e251]: 핵심 기능은 작게 시작하고, 확인 가능한 결과를 남깁니다.
+      - generic [ref=e252]:
+        - article [ref=e253]:
+          - heading "개발 범위 · 포함" [level=3] [ref=e254]
+          - list [ref=e255]:
+            - listitem [ref=e256]: 이동실별 QR 코드를 생성하고 방 정보를 연결합니다.
+            - listitem [ref=e257]: 학생이 QR 코드를 인식하면 도착 정보를 검증합니다.
+            - listitem [ref=e258]: 학생의 요청을 바탕으로 선생님에게 도착 알림을 보냅니다.
+        - article [ref=e259]:
+          - heading "개발 범위 · 제외" [level=3] [ref=e260]
+          - list [ref=e261]:
+            - listitem [ref=e262]: 이번 프로젝트에서 제외하는 기능은 없습니다.
+            - listitem [ref=e263]: QR 체크인부터 이동 기록 확인까지 전체 흐름을 개발합니다.
+      - generic [ref=e264]:
+        - generic [ref=e265]:
+          - heading "저장할 데이터" [level=3] [ref=e266]
+          - paragraph [ref=e267]: 학생별 최근 3개월간 방문한 실과 방문 횟수를 기록합니다.
+        - generic [ref=e268]: RETENTION · 3 MONTHS
+    - region "검증 조건" [ref=e269]:
+      - generic [ref=e270]:
+        - generic [ref=e271]: 04 / ACCEPTANCE CHECK
+        - heading "검증 조건" [level=2] [ref=e272]
+        - paragraph [ref=e273]: 아래 세 가지가 모두 확인되면 핵심 기능이 완성됩니다. 항목을 눌러 체크해 보세요.
+      - group "검증 조건 목록" [ref=e274]:
+        - checkbox "✓ QR 코드가 이동실 정보와 함께 제대로 생성되는가?" [ref=e275] [cursor=pointer]:
+          - generic [ref=e276]: ✓
+          - generic [ref=e277]: QR 코드가 이동실 정보와 함께 제대로 생성되는가?
+        - checkbox "✓ 학생이 QR 코드를 찍었을 때 제대로 인식되는가?" [ref=e278] [cursor=pointer]:
+          - generic [ref=e279]: ✓
+          - generic [ref=e280]: 학생이 QR 코드를 찍었을 때 제대로 인식되는가?
+        - checkbox "✓ “김OO이 1번 실습실에 도착했어요” 알림이 선생님에게 가는가?" [ref=e281] [cursor=pointer]:
+          - generic [ref=e282]: ✓
+          - generic [ref=e283]: “김OO이 1번 실습실에 도착했어요” 알림이 선생님에게 가는가?
+  - contentinfo [ref=e284]:
+    - generic [ref=e285]: LoG고 · 소마고A · 교실 이동 확인 프로젝트
+    - button "기획서 인쇄하기" [ref=e286] [cursor=pointer]
