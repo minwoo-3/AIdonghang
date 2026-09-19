@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LoG고 | 교실 이동 확인 프로젝트</title>
+  <meta name="description" content="소마고A 팀의 교실 이동 확인 프로젝트 기획서" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%23236444'/%3E%3Ccircle cx='11' cy='11' r='4' fill='%23f5c86b'/%3E%3Ccircle cx='21' cy='21' r='4' fill='white'/%3E%3C/svg%3E" />
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Gowun+Dodum&family=Manrope:wght@500;600;700;800&display=swap');
+
+    :root {
+      --ink: #14211d;
+      --muted: #6e7b73;
+      --line: #dce4de;
+      --paper: #f7f9f5;
+      --card: #ffffff;
+      --green: #3d8b62;
+      --green-dark: #236444;
+      --mint: #e4f2e9;
+      --yellow: #f5c86b;
+      --shadow: 0 14px 40px rgba(45, 75, 58, .08);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--paper);
+      font-family: 'Gowun Dodum', sans-serif;
+      font-size: 17px;
+      line-height: 1.65;
+    }
+    button { font: inherit; }
+    .page-shell { overflow: hidden; }
+    .topbar {
+      width: min(1160px, calc(100% - 40px));
+      margin: 0 auto;
+      padding: 28px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'Manrope', sans-serif;
+      font-size: 14px;
+      font-weight: 800;
+      letter-spacing: .04em;
+    }
+    .brand-mark {
+      width: 30px; height: 30px; border-radius: 9px 9px 9px 2px;
+      background: var(--green-dark); position: relative;
+    }
+    .brand-mark::after { content: ''; position: absolute; width: 8px; height: 8px; background: var(--yellow); border-radius: 50%; top: 7px; left: 7px; box-shadow: 10px 8px 0 #fff; }
+    .topbar-link { color: var(--muted); font-size: 14px; text-decoration: none; }
+    .topbar-link:hover { color: var(--green-dark); }
+
+    main { width: min(1160px, calc(100% - 40px)); margin: 0 auto 90px; }
+    .hero {
+      min-height: 480px;
+      padding: 74px 7% 64px;
+      position: relative;
+      display: grid;
+      grid-template-columns: 1.15fr .85fr;
+      gap: 50px;
+      align-items: center;
+      background: var(--green-dark);
+      color: #f7fbf8;
+      border-radius: 28px;
+      overflow: hidden;
+    }
+    .hero::before { content: ''; position: absolute; width: 430px; height: 430px; border: 1px solid rgba(255,255,255,.14); border-radius: 50%; right: 8%; top: -170px; }
+    .hero::after { content: ''; position: absolute; width: 250px; height: 250px; border: 1px solid rgba(255,255,255,.1); border-radius: 50%; right: 18%; bottom: -145px; }
+    .eyebrow { font-family: 'DM Mono', monospace; font-size: 13px; letter-spacing: .12em; color: #a8d2b7; }
+    h1 { margin: 16px 0 18px; max-width: 600px; font-family: 'Manrope', sans-serif; font-size: clamp(42px, 6vw, 76px); line-height: 1.03; letter-spacing: -.06em; }
+    .hero-copy { max-width: 510px; color: #c8e0cf; font-size: 19px; }
+    .hero-meta { margin-top: 34px; display: flex; flex-wrap: wrap; gap: 10px; }
+    .tag { padding: 8px 13px; border: 1px solid rgba(255,255,255,.2); border-radius: 999px; color: #e1f1e5; font-size: 14px; }
+    .hero-visual { z-index: 1; display: flex; justify-content: center; }
+    .qr-card { width: min(300px, 100%); padding: 23px; background: #f8fbf7; border-radius: 18px; color: var(--ink); transform: rotate(3deg); box-shadow: 0 25px 60px rgba(0,0,0,.18); }
+    .qr-top { display: flex; justify-content: space-between; align-items: center; font-family: 'DM Mono', monospace; font-size: 11px; color: var(--green); }
+    .qr-grid { margin: 21px auto 16px; width: 190px; height: 190px; display: grid; grid-template-columns: repeat(13, 1fr); gap: 4px; }
+    .qr-grid i { display: block; background: #173128; border-radius: 1px; }
+    .qr-grid i:nth-child(3n), .qr-grid i:nth-child(7n+2), .qr-grid i:nth-child(11n+1) { background: transparent; }
+    .qr-grid i:nth-child(13n+1), .qr-grid i:nth-child(13n+2), .qr-grid i:nth-child(13n+3), .qr-grid i:nth-child(13n+11), .qr-grid i:nth-child(13n+12), .qr-grid i:nth-child(13n+13), .qr-grid i:nth-child(1), .qr-grid i:nth-child(2), .qr-grid i:nth-child(3), .qr-grid i:nth-child(11), .qr-grid i:nth-child(12), .qr-grid i:nth-child(13) { background: #173128; }
+    .qr-title { margin: 0; font-family: 'Manrope', sans-serif; font-weight: 800; font-size: 19px; }
+    .qr-sub { margin: 3px 0 0; color: var(--muted); font-size: 13px; }
+
+    .section { margin-top: 78px; }
+    .section-heading { display: flex; justify-content: space-between; gap: 20px; align-items: end; margin-bottom: 22px; }
+    .section-number { color: var(--green); font: 500 13px 'DM Mono', monospace; letter-spacing: .1em; }
+    h2 { margin: 5px 0 0; font-family: 'Manrope', sans-serif; font-size: clamp(28px, 4vw, 42px); letter-spacing: -.05em; line-height: 1.1; }
+    .section-note { max-width: 340px; margin: 0; color: var(--muted); font-size: 15px; text-align: right; }
+    .intro-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .info-card { padding: 30px; min-height: 205px; background: var(--card); border: 1px solid var(--line); border-radius: 18px; box-shadow: var(--shadow); }
+    .info-card.wide { grid-column: 1 / -1; min-height: auto; }
+    .card-label { display: flex; align-items: center; gap: 9px; color: var(--green-dark); font: 500 12px 'DM Mono', monospace; letter-spacing: .08em; text-transform: uppercase; }
+    .dot { width: 8px; height: 8px; background: var(--yellow); border-radius: 50%; }
+    .info-card h3 { margin: 22px 0 8px; font-size: 23px; letter-spacing: -.04em; }
+    .info-card p { margin: 0; color: #53635a; }
+    .team-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+    .member { padding: 9px 13px; background: var(--mint); border-radius: 9px; color: var(--green-dark); font-size: 15px; }
+
+    .flow { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; counter-reset: flow; }
+    .flow-card { position: relative; min-height: 220px; padding: 28px; border: 1px solid var(--line); border-radius: 18px; background: var(--card); }
+    .flow-card::before { counter-increment: flow; content: '0' counter(flow); color: #a7b5ab; font: 500 13px 'DM Mono', monospace; }
+    .flow-card h3 { margin: 27px 0 7px; font-size: 21px; }
+    .flow-card p { margin: 0; color: var(--muted); font-size: 15px; }
+    .flow-card .arrow { position: absolute; top: 28px; right: 26px; color: var(--green); font-size: 22px; }
+
+    .scope-grid { display: grid; grid-template-columns: 1.05fr .95fr; gap: 16px; }
+    .scope-card { padding: 30px; border-radius: 18px; background: var(--card); border: 1px solid var(--line); }
+    .scope-card.include { border-top: 4px solid var(--green); }
+    .scope-card.exclude { border-top: 4px solid var(--yellow); }
+    .scope-card h3 { margin: 0 0 20px; font-size: 21px; }
+    .scope-list, .check-list { padding: 0; margin: 0; list-style: none; }
+    .scope-list li { display: flex; gap: 12px; padding: 14px 0; border-top: 1px solid #edf1ed; color: #53635a; font-size: 15px; }
+    .scope-list li::before { content: ''; width: 7px; height: 7px; margin-top: 9px; flex: 0 0 auto; border-radius: 50%; background: var(--green); }
+    .exclude .scope-list li::before { background: var(--yellow); }
+
+    .check-panel { display: grid; grid-template-columns: .9fr 1.1fr; gap: 26px; padding: 35px; color: #f5fbf6; background: #1e332a; border-radius: 22px; }
+    .check-panel h2 { color: #f5fbf6; }
+    .check-panel .section-number { color: #a8d2b7; }
+    .check-intro p { color: #b4cbb9; }
+    .check-list { display: grid; gap: 10px; }
+    .check-item { width: 100%; display: flex; align-items: center; gap: 13px; padding: 15px 16px; border: 1px solid rgba(255,255,255,.13); border-radius: 11px; background: rgba(255,255,255,.05); color: #e6f1e8; text-align: left; cursor: pointer; transition: background .2s, border-color .2s, transform .2s; }
+    .check-item:hover { transform: translateX(3px); border-color: #80b894; }
+    .check-item[aria-checked="true"] { background: #315c43; border-color: #75b98b; }
+    .check-icon { width: 22px; height: 22px; display: grid; place-items: center; flex: 0 0 auto; border: 1px solid #83a78d; border-radius: 50%; color: transparent; font: 700 14px 'Manrope', sans-serif; }
+    .check-item[aria-checked="true"] .check-icon { background: #9bd0a8; border-color: #9bd0a8; color: #1e332a; }
+    .data-band { margin-top: 16px; padding: 26px 30px; display: flex; justify-content: space-between; align-items: center; gap: 20px; background: var(--mint); border-radius: 18px; }
+    .data-band h3 { margin: 0 0 4px; font-size: 20px; }
+    .data-band p { margin: 0; color: #53635a; font-size: 15px; }
+    .data-badge { padding: 10px 13px; color: var(--green-dark); border: 1px solid #b9d9c3; border-radius: 10px; font: 500 12px 'DM Mono', monospace; white-space: nowrap; }
+    footer { width: min(1160px, calc(100% - 40px)); margin: 0 auto; padding: 36px 0 58px; display: flex; justify-content: space-between; color: var(--muted); border-top: 1px solid var(--line); font-size: 14px; }
+    .print-button { border: 0; padding: 10px 15px; color: var(--green-dark); background: var(--mint); border-radius: 8px; cursor: pointer; }
+    .print-button:hover { background: #d1e9d9; }
+    @media (max-width: 760px) {
+      body { font-size: 16px; }
+      .topbar, main, footer { width: min(100% - 28px, 1160px); }
+      .topbar { padding: 19px 0; }
+      .hero { display: block; padding: 48px 26px 35px; border-radius: 20px; }
+      .hero-copy { font-size: 17px; }
+      .hero-visual { margin-top: 38px; }
+      .qr-card { width: 245px; }
+      .qr-grid { width: 155px; height: 155px; }
+      .section { margin-top: 54px; }
+      .section-heading { display: block; }
+      .section-note { margin-top: 13px; text-align: left; }
+      .intro-grid, .flow, .scope-grid, .check-panel { grid-template-columns: 1fr; }
+      .info-card.wide { grid-column: auto; }
+      .check-panel { padding: 28px 22px; }
+      .data-band { display: block; padding: 23px; }
+      .data-badge { display: inline-block; margin-top: 17px; }
+      footer { display: block; }
+      .print-button { margin-top: 14px; }
+    }
+    @media print {
+      body { background: #fff; }
+      .topbar-link, .print-button { display: none; }
+      .hero { color: #14211d; background: #e4f2e9; }
+      .hero-copy, .tag { color: #53635a; }
+      .tag { border-color: #b9d9c3; }
+      .check-panel { color: #14211d; background: #e4f2e9; }
+      .check-panel h2 { color: #14211d; }
+      .check-panel .section-number, .check-intro p, .check-item { color: #53635a; }
+      .check-item { border-color: #b9d9c3; background: #fff; }
+      footer { padding-bottom: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-shell">
+    <header class="topbar">
+      <div class="brand"><span class="brand-mark" aria-hidden="true"></span> LoG고 / PROJECT BRIEF</div>
+      <a class="topbar-link" href="#scope">기획 범위 보기 ↗</a>
+    </header>
+
+    <main>
+      <section class="hero" aria-labelledby="page-title">
+        <div>
+          <div class="eyebrow">SOMAGO A · 2026 PROJECT</div>
+          <h1 id="page-title">교실 이동<br />확인 프로젝트</h1>
+          <p class="hero-copy">이동실의 QR 코드를 찍으면 학생의 도착을 선생님께 바로 알려주는 야간 자율학습 관리 서비스입니다.</p>
+          <div class="hero-meta"><span class="tag">QR 기반 확인</span><span class="tag">선생님 알림</span><span class="tag">이동 기록</span></div>
+        </div>
+        <div class="hero-visual" aria-label="1번 실습실 QR 코드 예시">
+          <div class="qr-card">
+            <div class="qr-top"><span>ROOM CHECK</span><span>NO. 01</span></div>
+            <div class="qr-grid" aria-hidden="true">
+              <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+              <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+              <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+              <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+              <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+              <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+              <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+              <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+              <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+              <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+              <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+              <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+              <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+            </div>
+            <p class="qr-title">1번 실습실</p><p class="qr-sub">학생 도착 확인용</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" aria-labelledby="what-title">
+        <div class="section-heading"><div><div class="section-number">01 / WHAT TO MAKE</div><h2 id="what-title">무엇을 만들까</h2></div><p class="section-note">야자시간 교실 이동을 더 빠르고 정확하게 확인합니다.</p></div>
+        <div class="intro-grid">
+          <article class="info-card wide"><div class="card-label"><span class="dot"></span> USER & CONTEXT</div><h3>선생님들이 야자시간에 학생의 이동을 확인해야 하는 상황</h3><p>학생들이 정해진 이동실로 이동하는 동안, 여러 이동실을 담당하는 선생님들이 직접 교실을 둘러보며 도착 여부를 확인하고 있습니다.</p></article>
+          <article class="info-card"><div class="card-label"><span class="dot"></span> PROBLEM</div><h3>각 이동실을 모두 둘러봐야 해요</h3><p>선생님들이 담당 교실을 일일이 방문해야 하므로 확인에 시간이 걸리고, 학생의 도착 여부를 놓칠 수 있습니다.</p></article>
+          <article class="info-card"><div class="card-label"><span class="dot"></span> SOLUTION</div><h3>도착 즉시 QR 체크인</h3><p>학생이 이동실에 지정된 QR 코드를 찍으면 “김OO이 1번 실습실에 도착했어요”라는 알림이 선생님에게 전달됩니다.</p></article>
+          <article class="info-card wide"><div class="card-label"><span class="dot"></span> PRODUCT</div><h3>QR 기반 교실 이동 확인 웹사이트</h3><p>학생의 간단한 체크인과 선생님의 실시간 확인을 연결하는 교실 이동 확인 프로젝트입니다.</p><div class="team-row"><span class="member">팀 LoG고</span><span class="member">소마고A</span><span class="member">강민우 · 정성원 · 조현</span></div></article>
+        </div>
+      </section>
+
+      <section class="section" aria-labelledby="flow-title">
+        <div class="section-heading"><div><div class="section-number">02 / USER FLOW</div><h2 id="flow-title">사용 흐름</h2></div><p class="section-note">학생의 한 번의 스캔이 선생님의 확인이 됩니다.</p></div>
+        <div class="flow">
+          <article class="flow-card"><span class="arrow">↗</span><h3>이동실 도착</h3><p>학생이 지정된 이동실에 도착합니다.</p></article>
+          <article class="flow-card"><span class="arrow">↗</span><h3>QR 코드 인식</h3><p>이동실에 붙은 QR 코드를 스마트폰으로 찍습니다.</p></article>
+          <article class="flow-card"><h3>선생님 알림</h3><p>학생 이름과 도착한 실 정보가 선생님에게 전달됩니다.</p></article>
+        </div>
+      </section>
+
+      <section class="section" id="scope" aria-labelledby="scope-title">
+        <div class="section-heading"><div><div class="section-number">03 / BUILD SCOPE</div><h2 id="scope-title">어디까지 만들까</h2></div><p class="section-note">핵심 기능은 작게 시작하고, 확인 가능한 결과를 남깁니다.</p></div>
+        <div class="scope-grid">
+          <article class="scope-card include"><h3>개발 범위 · 포함</h3><ul class="scope-list"><li>이동실별 QR 코드를 생성하고 방 정보를 연결합니다.</li><li>학생이 QR 코드를 인식하면 도착 정보를 검증합니다.</li><li>학생의 요청을 바탕으로 선생님에게 도착 알림을 보냅니다.</li></ul></article>
+          <article class="scope-card exclude"><h3>개발 범위 · 제외</h3><ul class="scope-list"><li>이번 프로젝트에서 제외하는 기능은 없습니다.</li><li>QR 체크인부터 이동 기록 확인까지 전체 흐름을 개발합니다.</li></ul></article>
+        </div>
+        <div class="data-band"><div><h3>저장할 데이터</h3><p>학생별 최근 3개월간 방문한 실과 방문 횟수를 기록합니다.</p></div><span class="data-badge">RETENTION · 3 MONTHS</span></div>
+      </section>
+
+      <section class="section check-panel" aria-labelledby="check-title">
+        <div class="check-intro"><div class="section-number">04 / ACCEPTANCE CHECK</div><h2 id="check-title">검증 조건</h2><p>아래 세 가지가 모두 확인되면 핵심 기능이 완성됩니다. 항목을 눌러 체크해 보세요.</p></div>
+        <div class="check-list" role="group" aria-label="검증 조건 목록">
+          <button class="check-item" type="button" role="checkbox" aria-checked="false"><span class="check-icon">✓</span><span>QR 코드가 이동실 정보와 함께 제대로 생성되는가?</span></button>
+          <button class="check-item" type="button" role="checkbox" aria-checked="false"><span class="check-icon">✓</span><span>학생이 QR 코드를 찍었을 때 제대로 인식되는가?</span></button>
+          <button class="check-item" type="button" role="checkbox" aria-checked="false"><span class="check-icon">✓</span><span>“김OO이 1번 실습실에 도착했어요” 알림이 선생님에게 가는가?</span></button>
+        </div>
+      </section>
+    </main>
+    <footer><span>LoG고 · 소마고A · 교실 이동 확인 프로젝트</span><button class="print-button" type="button" onclick="window.print()">기획서 인쇄하기</button></footer>
+  </div>
+  <script>
+    document.querySelectorAll('.check-item').forEach((item) => {
+      item.addEventListener('click', () => {
+        const checked = item.getAttribute('aria-checked') === 'true';
+        item.setAttribute('aria-checked', String(!checked));
+      });
+    });
+  </script>
+</body>
+</html>
