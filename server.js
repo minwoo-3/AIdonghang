@@ -82,6 +82,7 @@ ensureColumn('notifications', 'period');
 ensureColumn('rooms', 'qr_token');
 ensureColumn('rooms', 'qr_day');
 db.prepare("UPDATE move_requests SET status = 'pending' WHERE status = 'requested'").run();
+db.exec('CREATE UNIQUE INDEX IF NOT EXISTS visits_one_per_request ON visits(request_id) WHERE request_id IS NOT NULL');
 
 const seedTeacher = db.prepare('SELECT id FROM teachers WHERE email = ?').get('teacher@loggo.local');
 if (!seedTeacher) {
@@ -190,12 +191,23 @@ app.post('/api/checkins', (req, res) => {
   const cleanName = String(studentName).trim();
   const cleanId = String(studentId).trim();
   const cleanPeriod = String(period);
-  const identityRequest = db.prepare(`SELECT * FROM move_requests WHERE student_name = ? AND student_id = ? AND period = ? AND status IN ('pending', 'approved') ORDER BY id DESC LIMIT 1`).get(cleanName, cleanId, cleanPeriod);
+  const identityRequest = db.prepare(`SELECT * FROM move_requests WHERE student_name = ? AND student_id = ? AND period = ? AND status IN ('pending', 'approved', 'arrived') ORDER BY id DESC LIMIT 1`).get(cleanName, cleanId, cleanPeriod);
   if (!identityRequest) return res.status(403).json({ error: '신청한 학생 정보와 일치하는 승인 기록이 없습니다.' });
   if (identityRequest.room_id !== room.id) return res.status(403).json({ error: `신청한 실과 다릅니다. 신청한 실: ${db.prepare('SELECT name FROM rooms WHERE id = ?').get(identityRequest.room_id).name}` });
+  const existingVisit = db.prepare('SELECT id FROM visits WHERE request_id = ? ORDER BY id DESC LIMIT 1').get(identityRequest.id);
+  if (existingVisit) return res.json({ visitId: existingVisit.id, alreadyRecorded: true, message: `${cleanName} 학생의 ${room.name} 도착은 이미 기록되어 있습니다.`, room: { name: room.name, code: room.code } });
   if (identityRequest.status !== 'approved') return res.status(403).json({ error: '아직 선생님이 이동 신청을 승인하지 않았습니다.' });
   const now = isoNow();
-  const visit = db.prepare('INSERT INTO visits (student_name, student_id, period, room_id, request_id, created_at, confirmed) VALUES (?, ?, ?, ?, ?, ?, 0)').run(cleanName, cleanId, cleanPeriod, room.id, identityRequest.id, now);
+  let visit;
+  try {
+    visit = db.prepare('INSERT INTO visits (student_name, student_id, period, room_id, request_id, created_at, confirmed) VALUES (?, ?, ?, ?, ?, ?, 0)').run(cleanName, cleanId, cleanPeriod, room.id, identityRequest.id, now);
+  } catch (error) {
+    if (error.code === 'SQLITE_CONSTRAINT_UNIQUE') {
+      const duplicate = db.prepare('SELECT id FROM visits WHERE request_id = ? ORDER BY id DESC LIMIT 1').get(identityRequest.id);
+      return res.json({ visitId: duplicate.id, alreadyRecorded: true, message: `${cleanName} 학생의 ${room.name} 도착은 이미 기록되어 있습니다.`, room: { name: room.name, code: room.code } });
+    }
+    throw error;
+  }
   db.prepare('UPDATE move_requests SET status = \'arrived\' WHERE id = ?').run(identityRequest.id);
   db.prepare('INSERT INTO notifications (kind, student_name, student_id, period, room_id, message, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)').run('arrival', cleanName, cleanId, cleanPeriod, room.id, `${cleanName}(${cleanId}) 학생이 ${cleanPeriod}교시 ${room.name}에 도착했어요.`, now);
   res.json({ visitId: visit.lastInsertRowid, message: `${cleanName} 학생의 ${room.name} 도착 알림을 선생님에게 보냈어요.`, room: { name: room.name, code: room.code } });
