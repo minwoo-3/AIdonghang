@@ -1,2 +1,10 @@
 [      46ms] [INFO] [preview-bridge] v1.0.0 @ https://hofn4rz6912gqaek.jitda.io/__preview-bridge.js:1
 [      83ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) @ https://hofn4rz6912gqaek.jitda.io/:0
+[  630334ms] [ERROR] Failed to load resource: the server responded with a status of 503 () @ https://hofn4rz6912gqaek.jitda.io/api/dashboard:0
+[  635334ms] [ERROR] Failed to load resource: the server responded with a status of 401 () @ https://hofn4rz6912gqaek.jitda.io/api/dashboard:0
+[  637201ms] [INFO] [preview-bridge] v1.0.0 @ https://hofn4rz6912gqaek.jitda.io/__preview-bridge.js:1
+[  637203ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) @ https://hofn4rz6912gqaek.jitda.io/:0
+[  638206ms] [INFO] [preview-bridge] v1.0.0 @ https://hofn4rz6912gqaek.jitda.io/__preview-bridge.js:1
+[  638207ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) @ https://hofn4rz6912gqaek.jitda.io/?student=1&code=LOG-101&token=23f91a4f68f7d33a66afef171e8452790ff9:0
+[  665293ms] [INFO] [preview-bridge] v1.0.0 @ https://hofn4rz6912gqaek.jitda.io/__preview-bridge.js:1
+[  665296ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) @ https://hofn4rz6912gqaek.jitda.io/:0

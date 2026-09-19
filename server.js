@@ -153,16 +153,14 @@ app.post('/api/rooms', requireTeacher, (req, res) => {
 });
 
 app.post('/api/requests', (req, res) => {
-  const { studentGrade, studentClass, studentName, studentId, period, roomCode } = req.body || {};
+  const { studentName, studentId, period, roomCode } = req.body || {};
   const room = roomByCode(roomCode);
-  if (!studentGrade || !studentClass || !studentName || !studentId || !['10', '11'].includes(String(period)) || !room) return res.status(400).json({ error: '교시, 학년, 반, 이름, 학번, 이동실을 모두 확인해 주세요.' });
-  const cleanGrade = String(studentGrade).trim();
-  const cleanClass = String(studentClass).trim();
+  if (!studentName || !studentId || !['10', '11'].includes(String(period)) || !room) return res.status(400).json({ error: '교시, 이름, 학번, 이동실을 모두 확인해 주세요.' });
   const cleanName = String(studentName).trim();
   const cleanId = String(studentId).trim();
   const cleanPeriod = String(period);
-  const result = db.prepare('INSERT INTO move_requests (student_grade, student_class, student_name, student_id, period, room_id, status) VALUES (?, ?, ?, ?, ?, ?, ?)').run(cleanGrade, cleanClass, cleanName, cleanId, cleanPeriod, room.id, 'pending');
-  db.prepare('INSERT INTO notifications (kind, student_name, student_id, period, room_id, message) VALUES (?, ?, ?, ?, ?, ?)').run('request', cleanName, cleanId, cleanPeriod, room.id, `${cleanGrade}학년 ${cleanClass}반 ${cleanName}(${cleanId}) 학생이 ${cleanPeriod}교시 ${room.name}으로 이동 신청을 했어요.`);
+  const result = db.prepare('INSERT INTO move_requests (student_name, student_id, period, room_id, status) VALUES (?, ?, ?, ?, ?)').run(cleanName, cleanId, cleanPeriod, room.id, 'pending');
+  db.prepare('INSERT INTO notifications (kind, student_name, student_id, period, room_id, message) VALUES (?, ?, ?, ?, ?, ?)').run('request', cleanName, cleanId, cleanPeriod, room.id, `${cleanName}(${cleanId}) 학생이 ${cleanPeriod}교시 ${room.name}으로 이동 신청을 했어요.`);
   res.json({ requestId: result.lastInsertRowid, room: { name: room.name, code: room.code } });
 });
 
@@ -173,26 +171,20 @@ app.get('/api/requests/:id', (req, res) => {
 });
 
 app.post('/api/checkins', (req, res) => {
-  const { studentGrade, studentClass, studentName, studentId, period, roomCode, qrToken } = req.body || {};
+  const { studentName, studentId, period, roomCode, qrToken } = req.body || {};
   const room = roomByCode(roomCode);
-  if (!studentGrade || !studentClass || !studentName || !studentId || !['10', '11'].includes(String(period)) || !room || !qrToken) return res.status(400).json({ error: '오늘 발급된 QR을 찍은 뒤 인증해 주세요.' });
+  if (!studentName || !studentId || !['10', '11'].includes(String(period)) || !room || !qrToken) return res.status(400).json({ error: '실에 붙은 오늘 QR을 스마트폰 카메라로 찍어 인증 페이지를 열어 주세요.' });
   if (dailyRoomToken(room) !== String(qrToken)) return res.status(403).json({ error: '만료되었거나 다른 날의 QR입니다. 오늘 출력된 QR을 다시 찍어 주세요.' });
-  const cleanGrade = String(studentGrade).trim();
-  const cleanClass = String(studentClass).trim();
   const cleanName = String(studentName).trim();
   const cleanId = String(studentId).trim();
   const cleanPeriod = String(period);
-  const request = db.prepare(`SELECT * FROM move_requests WHERE student_grade = ? AND student_class = ? AND student_name = ? AND student_id = ? AND period = ? AND status = 'approved' ORDER BY id DESC LIMIT 1`).get(cleanGrade, cleanClass, cleanName, cleanId, cleanPeriod);
   const identityRequest = db.prepare(`SELECT * FROM move_requests WHERE student_name = ? AND student_id = ? AND period = ? AND status IN ('pending', 'approved') ORDER BY id DESC LIMIT 1`).get(cleanName, cleanId, cleanPeriod);
   if (!identityRequest) return res.status(403).json({ error: '신청한 학생 정보와 일치하는 승인 기록이 없습니다.' });
-  if (identityRequest.student_grade !== cleanGrade) return res.status(403).json({ error: '학년이 처음 신청한 정보와 다릅니다.' });
-  if (identityRequest.student_class !== cleanClass) return res.status(403).json({ error: '반이 처음 신청한 정보와 다릅니다.' });
   if (identityRequest.room_id !== room.id) return res.status(403).json({ error: `신청한 실과 다릅니다. 신청한 실: ${db.prepare('SELECT name FROM rooms WHERE id = ?').get(identityRequest.room_id).name}` });
   if (identityRequest.status !== 'approved') return res.status(403).json({ error: '아직 선생님이 이동 신청을 승인하지 않았습니다.' });
-  if (!request) return res.status(403).json({ error: '도착 인증 정보가 신청 내용과 일치하지 않습니다.' });
   const now = isoNow();
-  const visit = db.prepare('INSERT INTO visits (student_grade, student_class, student_name, student_id, period, room_id, request_id, created_at, confirmed) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 0)').run(cleanGrade, cleanClass, cleanName, cleanId, cleanPeriod, room.id, request.id, now);
-  db.prepare('UPDATE move_requests SET status = \'arrived\' WHERE id = ?').run(request.id);
+  const visit = db.prepare('INSERT INTO visits (student_name, student_id, period, room_id, request_id, created_at, confirmed) VALUES (?, ?, ?, ?, ?, ?, 0)').run(cleanName, cleanId, cleanPeriod, room.id, identityRequest.id, now);
+  db.prepare('UPDATE move_requests SET status = \'arrived\' WHERE id = ?').run(identityRequest.id);
   db.prepare('INSERT INTO notifications (kind, student_name, student_id, period, room_id, message, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)').run('arrival', cleanName, cleanId, cleanPeriod, room.id, `${cleanName}(${cleanId}) 학생이 ${cleanPeriod}교시 ${room.name}에 도착했어요.`, now);
   res.json({ visitId: visit.lastInsertRowid, message: `${cleanName} 학생의 ${room.name} 도착 알림을 선생님에게 보냈어요.`, room: { name: room.name, code: room.code } });
 });
